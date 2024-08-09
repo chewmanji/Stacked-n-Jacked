@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from core.database import engine
 from core import models
-from routers import user, exercise, user_exercise, training
+from routers import user, exercise, user_exercise, training, plan, training_session, exercise_in_session
 import uvicorn
 
 
@@ -14,6 +14,9 @@ app.include_router(user.router)
 app.include_router(exercise.router)
 app.include_router(user_exercise.router)
 app.include_router(training.router)
+app.include_router(plan.router)
+app.include_router(training_session.router)
+app.include_router(exercise_in_session.router)
 
 origins = ["http://localhost:8080"]
 

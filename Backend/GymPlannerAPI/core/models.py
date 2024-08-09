@@ -112,11 +112,15 @@ class TrainingSession(Base):
     exercises_in_session = relationship("ExerciseInSession", back_populates="training_session")
 
 
-class ExerciseInSession(UserExercise):
+class ExerciseInSession(Base):
     __tablename__ = "exercises_in_sessions"
 
-    user_exercise_id: Mapped[int] = mapped_column(Integer, ForeignKey(UserExercise.id), primary_key=True)
-    training_session_id: Mapped[int] = mapped_column(Integer, ForeignKey(TrainingSession.id), primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    sets_number: Mapped[int] = mapped_column(Integer)
+    reps_number: Mapped[int] = mapped_column(Integer)
+    weight: Mapped[float] = mapped_column(Float, nullable=True)
+    user_exercise_id: Mapped[int] = mapped_column(Integer, ForeignKey(UserExercise.id))
+    training_session_id: Mapped[int] = mapped_column(Integer, ForeignKey(TrainingSession.id))
 
     user_exercise = relationship(UserExercise)
     training_session = relationship(TrainingSession)

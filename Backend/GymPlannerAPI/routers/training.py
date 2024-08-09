@@ -20,7 +20,7 @@ def create_training(current_user: Annotated[schemas.User, Depends(get_current_us
     return crud.create_training(db, training)
 
 
-@router.get("{training_id}", response_model=schemas.Training)
+@router.get("/{training_id}", response_model=schemas.Training)
 def get_training(training_id: int, current_user: Annotated[schemas.User, Depends(get_current_user)]):
     training = next((training for training in current_user.trainings if training_id == training.id), None)
     if not training:
@@ -35,7 +35,8 @@ def get_trainings(current_user: Annotated[schemas.User, Depends(get_current_user
 
 
 @router.patch("", response_model=schemas.Training)
-def update_training(current_user: Annotated[schemas.User, Depends(get_current_user)], training_input: schemas.Training,
+def update_training(current_user: Annotated[schemas.User, Depends(get_current_user)],
+                    training_input: schemas.TrainingUpdate,
                     db: Session = Depends(get_db)):
     training = next((tr for tr in current_user.trainings if tr.id == training_input.id), None)
     if not training:

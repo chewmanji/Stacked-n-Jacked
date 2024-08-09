@@ -42,9 +42,23 @@ class PlanBase(BaseModel):
     goals: str | None = Field(default=None, max_length=50)
 
 
+class PlanCreate(PlanBase):
+    user_id: int
+
+
 class Plan(PlanBase):
     id: int
-    user_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class PlanUpdate(BaseModel):
+    id: int
+    name: str | None = Field(default=None, max_length=50)
+    start_date: datetime.date | None = None
+    end_date: datetime.date | None = None
+    goals: str | None = Field(default=None, max_length=50)
 
     class Config:
         from_attributes = True
@@ -55,6 +69,7 @@ class TrainingBase(BaseModel):
     weekday: Weekday | None = None
     type: TrainingType | None = None
     plan_id: int | None = None
+
 
 class TrainingCreate(TrainingBase):
     user_id: int
@@ -67,11 +82,21 @@ class Training(TrainingBase):
         from_attributes = True
 
 
+class TrainingUpdate(BaseModel):
+    id: int
+    name: str | None = None
+    weekday: Weekday | None = None
+    type: TrainingType | None = None
+    plan_id: int | None = None
+
+    class Config:
+        from_attributes = True
+
 
 class UserExerciseBase(BaseModel):
-    sets_number: int
-    reps_number: int
-    weight: float | None = None
+    sets_number: int = Field(ge=0, le=1000)
+    reps_number: int = Field(ge=0, le=1000)
+    weight: float | None = Field(default=None, ge=0, le=2000)
     notes: str | None = Field(default=None, max_length=255)
     exercise_id: int
     training_id: int | None = None
@@ -90,9 +115,9 @@ class UserExercise(UserExerciseBase):
 
 class UserExerciseUpdate(BaseModel):
     id: int
-    sets_number: int | None = None
-    reps_number: int | None = None
-    weight: float | None = None
+    sets_number: int | None = Field(default=None, ge=0, le=1000)
+    reps_number: int | None = Field(default=None, ge=0, le=1000)
+    weight: float | None = Field(default=None, ge=0, le=2000)
     notes: str | None = Field(default=None, max_length=255)
     exercise_id: int | None = None
     training_id: int | None = None
@@ -101,7 +126,7 @@ class UserExerciseUpdate(BaseModel):
         from_attributes = True
 
 
-class TrainingSession(BaseModel):
+class TrainingSessionBase(BaseModel):
     session_date: datetime.date = datetime.date.today()
     training_id: int
 
@@ -109,9 +134,23 @@ class TrainingSession(BaseModel):
         from_attributes = True
 
 
-class ExerciseInSession(UserExercise):
+class TrainingSession(TrainingSessionBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class ExerciseInSessionBase(BaseModel):
+    sets_number: int = Field(ge=0, le=1000)
+    reps_number: int = Field(ge=0, le=1000)
+    weight: float | None = Field(default=None, ge=0, le=2000)
     user_exercise_id: int
     training_session_id: int
+
+
+class ExerciseInSession(ExerciseInSessionBase):
+    id: int
 
     class Config:
         from_attributes = True

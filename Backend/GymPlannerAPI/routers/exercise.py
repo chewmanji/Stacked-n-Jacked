@@ -7,7 +7,7 @@ from typing import Annotated
 router = APIRouter(prefix="/exercises", tags=["Exercise"])
 
 
-@router.get("/")
+@router.get("")
 async def get_exercises(skip: Annotated[int, Query(ge=0)] = 0, limit: Annotated[int, Query(ge=0)] = 50,
                         db: Session = Depends(get_db)) -> list[schemas.Exercise]:
     return crud.get_exercises(db, skip=skip, limit=limit)

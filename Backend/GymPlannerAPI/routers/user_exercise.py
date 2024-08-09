@@ -27,7 +27,7 @@ def create_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
     return crud.create_user_exercise(db, user_exercise)
 
 
-@router.get("{user_exercise_id}", response_model=schemas.UserExercise)
+@router.get("/{user_exercise_id}", response_model=schemas.UserExercise)
 def get_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)],
                       user_exercise_id: Annotated[int, Path()]):
     exercise = next((ex for ex in current_user.user_exercises if ex.id == user_exercise_id), None)
@@ -66,7 +66,7 @@ def update_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
     return crud.update_user_exercise(db, updated_exercise)
 
 
-@router.delete("{user_exercise_id}", status_code=204)
+@router.delete("/{user_exercise_id}", status_code=204)
 def delete_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)], user_exercise_id: int,
                          db: Session = Depends(get_db)):
     exercise = next((ex for ex in current_user.user_exercises if ex.id == user_exercise_id), None)

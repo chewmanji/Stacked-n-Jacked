@@ -86,3 +86,59 @@ def delete_training(db: Session, training_id: int) -> None:
     training_db = db.query(models.Training).get(training_id)
     db.delete(training_db)
     db.commit()
+
+
+def create_plan(db: Session, plan: schemas.PlanCreate) -> models.Plan:
+    plan_db = models.Plan(**plan.model_dump())
+    db.add(plan_db)
+    db.commit()
+    db.refresh(plan_db)
+    return plan_db
+
+
+def update_plan(db: Session, updated_plan: schemas.Plan) -> models.Plan:
+    stmt = (update(models.Plan)
+            .where(models.Plan.id == updated_plan.id)
+            .values(**updated_plan.model_dump())
+            .returning(models.Plan))
+
+    res = db.execute(stmt).scalar_one_or_none()
+    db.commit()
+    return res
+
+
+def delete_plan(db: Session, plan_id: int) -> None:
+    plan_db = db.query(models.Plan).get(plan_id)
+    db.delete(plan_db)
+    db.commit()
+
+
+def create_training_session(db: Session, training_session: schemas.TrainingSessionBase) -> models.TrainingSession:
+    session_db = models.TrainingSession(**training_session.model_dump())
+    db.add(session_db)
+    db.commit()
+    db.refresh(session_db)
+    return session_db
+
+
+def get_training_session_by_id(db: Session, session_id: int) -> models.TrainingSession:
+    return db.query(models.TrainingSession).get(session_id)
+
+
+def get_training_sessions_by_user_id(db: Session, user_id: int) -> list[Type[models.TrainingSession]]:
+    return (db.query(models.TrainingSession)
+            .join(models.Training).join(models.User)
+            .where(models.User.id == user_id)
+            .all())
+
+
+def create_exercise_in_session(db: Session, ex_session_base: schemas.ExerciseInSessionBase) -> models.ExerciseInSession:
+    ex_db = models.ExerciseInSession(**ex_session_base.model_dump())
+    db.add(ex_db)
+    db.commit()
+    db.refresh(ex_db)
+    return ex_db
+
+
+def get_exercises_in_session(db: Session, session_id: int) -> list[Type[models.ExerciseInSession]]:
+    return db.query(models.ExerciseInSession).filter(models.ExerciseInSession.training_session_id == session_id).all()

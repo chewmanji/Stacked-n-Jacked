@@ -17,7 +17,7 @@ DB_NAME = os.getenv("DB_NAME")
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 # Create the SQLAlchemy engine
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True)
 
 # Create a sessionmaker
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
