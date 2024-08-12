@@ -13,5 +13,4 @@ Web app for creating gym plans and tracking progress.
 - REST architecture
 
 ### Frontend:
-
-- [ELM](https://elm-lang.org/)
+- React
