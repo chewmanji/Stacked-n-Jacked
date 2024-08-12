@@ -1,3 +1,4 @@
+import src.crud.user
 import src.schemas.user
 from src.core.database import SessionLocal
 from fastapi.security import OAuth2PasswordBearer
@@ -35,7 +36,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session 
         token_data = schemas.TokenData(user_id=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = crud.get_user_by_id(db, user_id=token_data.user_id)
+    user = src.crud.user.get_user_by_id(db, user_id=token_data.user_id)
     if user is None:
         raise credentials_exception
     return src.schemas.user.User.model_validate(user)

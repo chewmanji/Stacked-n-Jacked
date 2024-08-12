@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated
 
+import src.crud.user
 import src.schemas.user
 from src.core import crud
 from src.core import schemas
@@ -21,10 +22,10 @@ async def read_users_me(current_user: Annotated[src.schemas.user.User, Depends(g
 
 @router.post("/users", response_model=src.schemas.user.User)
 def create_user(user: src.schemas.user.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
+    db_user = src.crud.user.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+    return src.crud.user.create_user(db=db, user=user)
 
 
 @router.post("/token", response_model=schemas.Token)
