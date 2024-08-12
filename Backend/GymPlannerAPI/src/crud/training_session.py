@@ -24,3 +24,7 @@ def get_training_sessions_by_user_id(db: Session, user_id: int) -> list[Type[Tra
             .join(TrainingDB).join(UserDB)
             .where(UserDB.id == user_id)
             .all())
+
+
+def get_training_sessions_by_training_id(db: Session, training_id: int) -> list[Type[TrainingSessionDB]]:
+    return db.query(TrainingSessionDB).filter(TrainingSessionDB.training_id == training_id).all()

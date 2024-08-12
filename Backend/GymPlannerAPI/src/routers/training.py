@@ -4,7 +4,8 @@ from typing import Annotated
 
 import src.crud.plan as plan_service
 import src.crud.training as training_service
-from src.schemas.training import TrainingCreate, Training, TrainingBase, TrainingUpdate
+import src.crud.training_session as training_session_service
+from src.schemas.training import TrainingCreate, Training, TrainingBase, TrainingUpdate, TrainingSession
 from src.schemas.user import User
 from src.core.dependencies import get_db, get_current_user
 
@@ -34,6 +35,17 @@ def get_training(training_id: int, current_user: Annotated[User, Depends(get_cur
         raise HTTPException(status_code=404, detail="Training not found")
 
     return training
+
+
+@router.get("/{training_id}/training_sessions", response_model=list[TrainingSession])
+def get_training_sessions_in_training(training_id: int, current_user: Annotated[User, Depends(get_current_user)],
+                                      db: Session = Depends(get_db)):
+    trainings = training_service.get_trainings_by_user_id(db, current_user.id)
+    training = next((training for training in trainings if training_id == training.id), None)
+    if not training:
+        raise HTTPException(status_code=404, detail="Training not found")
+
+    return training_session_service.get_training_sessions_by_training_id(db, training_id)
 
 
 @router.get("", response_model=list[Training])
