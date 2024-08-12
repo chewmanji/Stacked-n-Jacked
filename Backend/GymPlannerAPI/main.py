@@ -1,13 +1,19 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.core.database import engine
-from src.core import models
-from src.routers import user, exercise_in_session
-from src.routers import plan, exercise, user_exercise, training, training_session
 import uvicorn
 
+from src.core.database import Base, engine
+from src.routers import (
+    user,
+    exercise_in_session,
+    plan,
+    exercise,
+    user_exercise,
+    training,
+    training_session
+)
 
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -37,8 +43,3 @@ async def main():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
-
-
-
