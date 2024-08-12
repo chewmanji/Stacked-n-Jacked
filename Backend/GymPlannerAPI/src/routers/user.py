@@ -3,21 +3,24 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated
-from core import crud, schemas
-from core.security import create_access_token, ACCESS_TOKEN_EXPIRE_DAYS
-from core.dependencies import get_db, get_current_user
-from core.auth import authenticate_user
+
+import src.schemas.user
+from src.core import crud
+from src.core import schemas
+from src.core.security import create_access_token, ACCESS_TOKEN_EXPIRE_DAYS
+from src.core.dependencies import get_db, get_current_user
+from src.core.auth import authenticate_user
 
 router = APIRouter(tags=["User"])
 
 
-@router.get("/users/me", response_model=schemas.User)
-async def read_users_me(current_user: Annotated[schemas.User, Depends(get_current_user)]):
+@router.get("/users/me", response_model=src.schemas.user.User)
+async def read_users_me(current_user: Annotated[src.schemas.user.User, Depends(get_current_user)]):
     return current_user
 
 
-@router.post("/users", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@router.post("/users", response_model=src.schemas.user.User)
+def create_user(user: src.schemas.user.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")

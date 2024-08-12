@@ -1,8 +1,10 @@
-from core.database import SessionLocal
+import src.schemas.user
+from src.core.database import SessionLocal
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
-from core import schemas, models, crud
-from core.security import SECRET_KEY, ALGORITHM
+from src.core import crud
+from src.core import schemas
+from src.core.security import SECRET_KEY, ALGORITHM
 import jwt
 from typing import Annotated
 from sqlalchemy.orm import Session
@@ -19,7 +21,7 @@ def get_db():
         db.close()
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)) -> schemas.User:
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)) -> src.schemas.user.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -36,4 +38,4 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session 
     user = crud.get_user_by_id(db, user_id=token_data.user_id)
     if user is None:
         raise credentials_exception
-    return schemas.User.model_validate(user)
+    return src.schemas.user.User.model_validate(user)

@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from core.database import engine
-from core import models
-from routers import user, exercise, user_exercise, training, plan, training_session, exercise_in_session
+from src.core.database import engine
+from src.core import models
+from src.routers import user, exercise_in_session
+from src.routers import plan, exercise, user_exercise, training, training_session
 import uvicorn
 
 

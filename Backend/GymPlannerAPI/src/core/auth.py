@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends
-from core.dependencies import get_db
-from core import crud
-from core.security import verify_password
+from src.core.dependencies import get_db
+from src.core import crud
+from src.core.security import verify_password
 
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):

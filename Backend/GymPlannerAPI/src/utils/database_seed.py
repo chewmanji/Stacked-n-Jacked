@@ -1,8 +1,8 @@
 import os
 import sys
 import pandas as pd
-from core.models import Exercise
-from core.database import SessionLocal
+from src.models.exercise import Exercise
+from src.core.database import SessionLocal
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from youtube_utils import get_youtube_video_url
