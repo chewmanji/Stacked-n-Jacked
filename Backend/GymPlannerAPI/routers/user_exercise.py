@@ -17,7 +17,8 @@ def create_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
         )
 
     if user_exercise_base.training_id is not None and not (
-            user_exercise_base.training_id in crud.get_trainings_by_user_id(db, current_user.id)):
+            user_exercise_base.training_id in [training.id for training in
+                                               crud.get_trainings_by_user_id(db, current_user.id)]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a training that you try to assign exercise to."
@@ -46,25 +47,27 @@ def get_user_exercises(current_user: Annotated[schemas.User, Depends(get_current
 def update_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)],
                          user_exercise: schemas.UserExerciseUpdate, db: Session = Depends(get_db)):
     user_exercises = crud.get_user_exercises_by_user_id(db, current_user.id)
-    exercise = next((ex for ex in user_exercises if ex.id == user_exercise.id), None)
-    if not exercise:
+    db_user_exercise = next((ex for ex in user_exercises if ex.id == user_exercise.id), None)
+    if not db_user_exercise:
         raise HTTPException(status_code=404, detail="User exercise with given id does not exist")
 
-    if not crud.get_exercise_by_id(db, user_exercise.exercise_id):
+    if user_exercise.exercise_id is not None and not crud.get_exercise_by_id(db, user_exercise.exercise_id):
         raise HTTPException(
             status_code=404,
             detail="Exercise with given id does not exist"
         )
 
     trainings = crud.get_trainings_by_user_id(db, current_user.id)
-    if (user_exercise.training_id is not None) and not (user_exercise.training_id in trainings):
+    if (user_exercise.training_id is not None) and not (
+            user_exercise.training_id in [training.id for training in trainings]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a training that you try to assign exercise to."
         )
 
+    model_user_exercise = schemas.UserExercise(**db_user_exercise.__dict__)
     update_data = user_exercise.dict(exclude_unset=True)
-    updated_exercise = exercise.model_copy(update=update_data)
+    updated_exercise = model_user_exercise.model_copy(update=update_data)
     return crud.update_user_exercise(db, updated_exercise)
 
 

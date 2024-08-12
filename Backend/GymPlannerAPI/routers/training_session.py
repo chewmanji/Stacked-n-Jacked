@@ -10,7 +10,8 @@ router = APIRouter(prefix="/training_sessions", tags=["Training session"])
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=schemas.TrainingSessionBase)
 def create_training_session(current_user: Annotated[schemas.User, Depends(get_current_user)],
                             training_session_base: schemas.TrainingSessionBase, db: Session = Depends(get_db)):
-    if not current_user.has_access_to_training(training_session_base.training_id):
+    trainings = crud.get_trainings_by_user_id(db, current_user.id)
+    if not (training_session_base.training_id in [training.id for training in trainings]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a training that you try to assign training session to."
@@ -26,7 +27,8 @@ def get_training_session(training_session_id: int, current_user: Annotated[schem
     if not session:
         raise HTTPException(status_code=404, detail="Training session not found")
 
-    if not current_user.has_access_to_training(session.training_id):
+    trainings = crud.get_trainings_by_user_id(db, current_user.id)
+    if not (session.training_id in [training.id for training in trainings]):
         raise HTTPException(status_code=403, detail="You do not have access to a training session with given id")
 
     return session

@@ -10,7 +10,8 @@ router = APIRouter(prefix="/exercises_in_session", tags=["Exercise in session"])
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=schemas.ExerciseInSession)
 def create_exercise_in_session(current_user: Annotated[schemas.User, Depends(get_current_user)],
                                ex_session_base: schemas.ExerciseInSessionBase, db: Session = Depends(get_db)):
-    if not current_user.has_access_to_user_exercise(ex_session_base.user_exercise_id):
+    user_exercises = crud.get_user_exercises_by_user_id(db, current_user.id)
+    if not (ex_session_base.user_exercise_id in [user_exercise.id for user_exercise in user_exercises]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a exercise that you try to assign exercise in session to."
@@ -26,7 +27,8 @@ def get_exercises_in_session(session_id: int, current_user: Annotated[schemas.Us
     if not training_session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    if not current_user.has_access_to_training(training_session.training_id):
+    trainings = crud.get_trainings_by_user_id(db, current_user.id)
+    if not (training_session.training_id in [training.id for training in trainings]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a given session"

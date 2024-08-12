@@ -15,8 +15,10 @@ def create_training(current_user: Annotated[schemas.User, Depends(get_current_us
 
 
 @router.get("/{plan_id}", response_model=schemas.Plan)
-def get_plan(plan_id: int, current_user: Annotated[schemas.User, Depends(get_current_user)]):
-    plan = next((plan for plan in current_user.plans if plan_id == plan.id), None)
+def get_plan(plan_id: int, current_user: Annotated[schemas.User, Depends(get_current_user)],
+             db: Session = Depends(get_db)):
+    plans = crud.get_plans_by_user_id(db, current_user.id)
+    plan = next((plan for plan in plans if plan_id == plan.id), None)
     if not plan:
         raise HTTPException(status_code=404, detail="Plan not found")
 
@@ -24,26 +26,29 @@ def get_plan(plan_id: int, current_user: Annotated[schemas.User, Depends(get_cur
 
 
 @router.get("", response_model=list[schemas.Plan])
-def get_plans(current_user: Annotated[schemas.User, Depends(get_current_user)]):
-    return current_user.plans
+def get_plans(current_user: Annotated[schemas.User, Depends(get_current_user)], db: Session = Depends(get_db)):
+    return crud.get_plans_by_user_id(db, current_user.id)
 
 
 @router.patch("", response_model=schemas.Plan)
 def update_plan(current_user: Annotated[schemas.User, Depends(get_current_user)], plan_input: schemas.PlanUpdate,
                 db: Session = Depends(get_db)):
-    plan = next((pl for pl in current_user.plans if pl.id == plan_input.id), None)
-    if not plan:
+    plans = crud.get_plans_by_user_id(db, current_user.id)
+    db_plan = next((pl for pl in plans if pl.id == plan_input.id), None)
+    if not db_plan:
         raise HTTPException(status_code=404, detail="Plan not found")
 
+    model_plan = schemas.Plan(**db_plan.__dict__)
     update_data = plan_input.dict(exclude_unset=True)
-    updated_plan = plan.model_copy(update=update_data)
+    updated_plan = model_plan.model_copy(update=update_data)
     return crud.update_plan(db, updated_plan)
 
 
 @router.delete("/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_plan(plan_id: int, current_user: Annotated[schemas.User, Depends(get_current_user)],
                 db: Session = Depends(get_db)):
-    plan = next((pl for pl in current_user.plans if pl.id == plan_id), None)
+    plans = crud.get_plans_by_user_id(db, current_user.id)
+    plan = next((pl for pl in plans if pl.id == plan_id), None)
     if not plan:
         raise HTTPException(status_code=404, detail="Plan not found")
 
