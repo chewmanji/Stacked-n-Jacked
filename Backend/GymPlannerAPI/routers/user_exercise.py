@@ -16,8 +16,8 @@ def create_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
             detail="Exercise with given id does not exist"
         )
 
-    if user_exercise_base.training_id is not None and not current_user.has_access_to_training(
-            user_exercise_base.training_id):
+    if user_exercise_base.training_id is not None and not (
+            user_exercise_base.training_id in crud.get_trainings_by_user_id(db, current_user.id)):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a training that you try to assign exercise to."
@@ -29,22 +29,24 @@ def create_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
 
 @router.get("/{user_exercise_id}", response_model=schemas.UserExercise)
 def get_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)],
-                      user_exercise_id: Annotated[int, Path()]):
-    exercise = next((ex for ex in current_user.user_exercises if ex.id == user_exercise_id), None)
+                      user_exercise_id: Annotated[int, Path()], db: Session = Depends(get_db)):
+    user_exercises = crud.get_user_exercises_by_user_id(db, current_user.id)
+    exercise = next((ex for ex in user_exercises if ex.id == user_exercise_id), None)
     if not exercise:
         raise HTTPException(status_code=404, detail="User exercise not found")
     return exercise
 
 
 @router.get("", response_model=list[schemas.UserExercise])
-def get_user_exercises(current_user: Annotated[schemas.User, Depends(get_current_user)]):
-    return current_user.user_exercises
+def get_user_exercises(current_user: Annotated[schemas.User, Depends(get_current_user)], db: Session = Depends(get_db)):
+    return crud.get_user_exercises_by_user_id(db, current_user.id)
 
 
 @router.patch("", response_model=schemas.UserExercise)
 def update_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)],
                          user_exercise: schemas.UserExerciseUpdate, db: Session = Depends(get_db)):
-    exercise = next((ex for ex in current_user.user_exercises if ex.id == user_exercise.id), None)
+    user_exercises = crud.get_user_exercises_by_user_id(db, current_user.id)
+    exercise = next((ex for ex in user_exercises if ex.id == user_exercise.id), None)
     if not exercise:
         raise HTTPException(status_code=404, detail="User exercise with given id does not exist")
 
@@ -54,8 +56,8 @@ def update_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
             detail="Exercise with given id does not exist"
         )
 
-    if user_exercise.training_id is not None and not current_user.has_access_to_training(
-            user_exercise.training_id):
+    trainings = crud.get_trainings_by_user_id(db, current_user.id)
+    if (user_exercise.training_id is not None) and not (user_exercise.training_id in trainings):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have access to a training that you try to assign exercise to."
@@ -69,8 +71,9 @@ def update_user_exercise(current_user: Annotated[schemas.User, Depends(get_curre
 @router.delete("/{user_exercise_id}", status_code=204)
 def delete_user_exercise(current_user: Annotated[schemas.User, Depends(get_current_user)], user_exercise_id: int,
                          db: Session = Depends(get_db)):
-    exercise = next((ex for ex in current_user.user_exercises if ex.id == user_exercise_id), None)
-    if not exercise:
+    user_exercises = crud.get_user_exercises_by_user_id(db, current_user.id)
+    user_exercise_to_delete = next((ex for ex in user_exercises if ex.id == user_exercise_id), None)
+    if not user_exercise_to_delete:
         raise HTTPException(status_code=404, detail="User exercise with given id does not exist")
 
     crud.delete_user_exercise(db, user_exercise_id)

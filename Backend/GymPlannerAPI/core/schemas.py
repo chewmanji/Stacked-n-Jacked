@@ -1,7 +1,9 @@
 import datetime
 import re
 from pydantic import BaseModel, Field, HttpUrl, field_validator, EmailStr
+from sqlalchemy.orm import Session
 from core.models import Gender, Weekday, TrainingType
+import core.crud as crud
 
 
 class Token(BaseModel):
@@ -10,7 +12,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str | None = None
+    user_id: int | None = None
 
 
 class Exercise(BaseModel):
@@ -168,18 +170,22 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    user_exercises: list[UserExercise] = []
-    trainings: list[Training] = []
-    plans: list[Plan] = []
+
+    # user_exercises: list[UserExercise] = []
+    # trainings: list[Training] = []
+    # plans: list[Plan] = []
 
     class Config:
         from_attributes = True
 
-    def has_access_to_training(self, training_id: int) -> bool:
-        return any(training.id == training_id for training in self.trainings)
-
-    def has_access_to_user_exercise(self, user_exercise_id: int) -> bool:
-        return any(user_exercise.id == user_exercise_id for user_exercise in self.user_exercises)
-
-    def has_access_to_plan(self, plan_id: int) -> bool:
-        return any(plan.id == plan_id for plan in self.plans)
+    # def has_access_to_training(self,  training_id: int, db: Session) -> bool:
+    #     trainings = crud.get_trainings_by_user_id(db, self.id)
+    #     return any(training.id == training_id for training in trainings)
+    #
+    # def has_access_to_user_exercise(self,  user_exercise_id: int, db: Session) -> bool:
+    #     user_exercises = crud.get_user_exercises_by_user_id(db, self.id)
+    #     return any(user_exercise.id == user_exercise_id for user_exercise in user_exercises)
+    #
+    # def has_access_to_plan(self,  plan_id: int, db: Session) -> bool:
+    #     plans = crud.get_plans_by_user_id(db, self.id)
+    #     return any(plan.id == plan_id for plan in plans)

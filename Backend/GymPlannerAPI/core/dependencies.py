@@ -8,7 +8,6 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from jwt.exceptions import InvalidTokenError
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -19,7 +18,7 @@ def get_db():
     finally:
         db.close()
 
-#???inefficient in current implementation of schemas.User (lists of related entities cause additional sql queries)
+
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)) -> schemas.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -28,13 +27,13 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session 
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        user_id: int = payload.get("user_id")
+        if user_id is None:
             raise credentials_exception
-        token_data = schemas.TokenData(username=username)
+        token_data = schemas.TokenData(user_id=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = crud.get_user_by_email(db, email=token_data.username)
+    user = crud.get_user_by_id(db, user_id=token_data.user_id)
     if user is None:
         raise credentials_exception
     return schemas.User.model_validate(user)

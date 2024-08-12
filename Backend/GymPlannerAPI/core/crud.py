@@ -15,7 +15,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-def get_user(db: Session, user_id: int) -> models.User | None:
+def get_user_by_id(db: Session, user_id: int) -> models.User | None:
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
@@ -43,7 +43,7 @@ def get_user_exercise_by_id(db: Session, exercise_id: int) -> models.UserExercis
     return db.query(models.UserExercise).get(exercise_id)
 
 
-def get_user_exercises(db: Session, user_id: int) -> list[Type[models.UserExercise]]:
+def get_user_exercises_by_user_id(db: Session, user_id: int) -> list[Type[models.UserExercise]]:
     return db.query(models.UserExercise).filter(models.UserExercise.user_id == user_id).all()
 
 
@@ -87,6 +87,9 @@ def delete_training(db: Session, training_id: int) -> None:
     db.delete(training_db)
     db.commit()
 
+def get_trainings_by_user_id(db: Session, user_id:int) -> list[Type[models.Training]]:
+    return db.query(models.Training).filter(models.Training.user_id == user_id).all()
+
 
 def create_plan(db: Session, plan: schemas.PlanCreate) -> models.Plan:
     plan_db = models.Plan(**plan.model_dump())
@@ -111,6 +114,9 @@ def delete_plan(db: Session, plan_id: int) -> None:
     plan_db = db.query(models.Plan).get(plan_id)
     db.delete(plan_db)
     db.commit()
+
+def get_plans_by_user_id(db:Session, user_id: int) -> list[Type[models.Plan]]:
+    return db.query(models.Plan).filter(models.Plan.user_id == user_id).all()
 
 
 def create_training_session(db: Session, training_session: schemas.TrainingSessionBase) -> models.TrainingSession:
