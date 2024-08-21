@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import Annotated
 
-import src.crud.training as training_service
+import src.crud.workout as training_service
 import src.crud.training_session as training_session_service
-import src.crud.exercise_in_session as exercise_in_session_service
-from src.schemas.training import TrainingSession, TrainingSessionBase
+import src.crud.set as exercise_in_session_service
+from src.schemas.workout import TrainingSession, TrainingSessionBase
 from src.schemas.user import User
-from src.schemas.user_exercise import ExerciseInSession
+from src.schemas.workout_exercise import ExerciseInSession
 from src.core.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/training_sessions", tags=["Training session"])

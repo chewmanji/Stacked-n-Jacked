@@ -8,8 +8,8 @@ from src.routers import (
     exercise_in_session,
     plan,
     exercise,
-    user_exercise,
-    training,
+    workout_exercise,
+    workout,
     training_session
 )
 

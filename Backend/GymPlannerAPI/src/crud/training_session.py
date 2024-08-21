@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.models.training import TrainingSession as TrainingSessionDB, Training as TrainingDB
 from src.models.user import User as UserDB
-from src.schemas.training import TrainingSessionBase
+from src.schemas.workout import TrainingSessionBase
 
 
 def create_training_session(db: Session, training_session: TrainingSessionBase) -> TrainingSessionDB:

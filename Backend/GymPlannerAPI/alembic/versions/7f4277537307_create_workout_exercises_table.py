@@ -23,7 +23,8 @@ def upgrade() -> None:
                     Column('id', Integer, primary_key=True, autoincrement=True),
                     Column('notes', String(300), nullable=True),
                     Column('workout_id', Integer, ForeignKey('workouts.id'), nullable=False),
-                    Column('exercise_id', Integer, ForeignKey('exercises.id'), nullable=False)
+                    Column('exercise_id', Integer, ForeignKey('exercises.id'), nullable=False),
+                    Column('user_id', Integer, ForeignKey('users.id'), nullable=False)
                     )
 
 

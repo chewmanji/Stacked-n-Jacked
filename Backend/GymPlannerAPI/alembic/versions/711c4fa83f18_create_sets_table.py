@@ -25,7 +25,8 @@ def upgrade() -> None:
                     Column('weight', DECIMAL(precision=3, scale=6)),
                     Column('set_number', Integer),
                     Column('notes', String(150), nullable=True),
-                    Column('workout_exercise_id', Integer, ForeignKey('workout_exercises.id'), nullable=False)
+                    Column('workout_exercise_id', Integer, ForeignKey('workout_exercises.id'), nullable=False),
+                    Column('user_id', Integer, ForeignKey('users.id'), nullable=False)
                     )
 
 
