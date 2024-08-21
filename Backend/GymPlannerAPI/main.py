@@ -13,7 +13,8 @@ from src.routers import (
     training_session
 )
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI()
 
