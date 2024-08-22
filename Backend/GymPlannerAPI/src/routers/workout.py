@@ -15,12 +15,6 @@ router = APIRouter(prefix="/workouts", tags=["Workout"])
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=WorkoutBase)
 def create_workout(current_user: Annotated[UserDB, Depends(get_current_user)],
                    workout_base: WorkoutBase, db: Session = Depends(get_db)):
-    # plans = plan_service.get_plans_by_user_id(db, current_user.id)
-    # if workout_base.plan_id is not None and not (workout_base.plan_id not in [plan_id for plan_id in plans]):
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="You do not have access to a plan that you try to assign workout to."
-    #     )
     workout = WorkoutCreate(**workout_base.model_dump(), user_id=current_user.id)
     return workout_service.create_workout(db, workout)
 

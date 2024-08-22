@@ -15,7 +15,6 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String)
     birth_date: Mapped[datetime.date] = mapped_column(Date)
     gender: Mapped[Gender] = mapped_column(Enum(Gender), default=Gender.Unknown)
-    #created at updated at???
 
     workout_exercises = relationship("WorkoutExercise", back_populates="user")
     workouts = relationship("Workout", back_populates="user")

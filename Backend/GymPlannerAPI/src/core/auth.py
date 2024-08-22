@@ -3,7 +3,6 @@ from fastapi import Depends
 
 import src.crud.user
 from src.core.dependencies import get_db
-from src.core import crud
 from src.core.security import verify_password
 
 
