@@ -9,7 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 from sqlalchemy import Column, Integer, String, Date, Enum, func
-from src.models.user import Gender
+from src.models.enums import Gender
 
 # revision identifiers, used by Alembic.
 revision: str = 'de2621bfa41c'

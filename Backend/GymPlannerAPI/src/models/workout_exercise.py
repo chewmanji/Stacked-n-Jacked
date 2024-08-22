@@ -18,3 +18,4 @@ class WorkoutExercise(Base):
 
     exercise = relationship(Exercise)
     workout = relationship(Workout)
+    user = relationship(User)

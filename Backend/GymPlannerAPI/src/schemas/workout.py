@@ -8,7 +8,6 @@ from src.models.enums import TrainingType
 class WorkoutBase(BaseModel):
     type: TrainingType | None = None
     notes: str | None = Field(max_length=1000)
-    plan_id: int | None = None
 
 
 class WorkoutCreate(WorkoutBase):
@@ -26,7 +25,7 @@ class Workout(WorkoutBase):
 class WorkoutUpdate(BaseModel):
     id: int
     notes: str | None = Field(max_length=1000)
-    workout_date: datetime.date
+    workout_date: datetime.date | None = None
     type: TrainingType | None = None
 
     class Config:

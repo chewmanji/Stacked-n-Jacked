@@ -5,26 +5,22 @@ import uvicorn
 from src.core.database import Base, engine
 from src.routers import (
     user,
-    exercise_in_session,
-    plan,
     exercise,
     workout_exercise,
     workout,
-    training_session
+    set
 )
 
-#Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
 
 app.include_router(user.router)
 app.include_router(exercise.router)
-app.include_router(user_exercise.router)
-app.include_router(training.router)
-app.include_router(plan.router)
-app.include_router(training_session.router)
-app.include_router(exercise_in_session.router)
+app.include_router(workout_exercise.router)
+app.include_router(workout.router)
+app.include_router(set.router)
 
 origins = ["http://localhost:8080"]
 

@@ -9,7 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 from sqlalchemy import Column, Integer, String, Date, Enum, func, ForeignKey
-from src.models.training import TrainingType
+from src.models.enums import TrainingType
 
 
 # revision identifiers, used by Alembic.

@@ -8,7 +8,7 @@ Create Date: 2024-08-21 02:51:19.781223
 from typing import Sequence, Union
 
 from alembic import op
-from sqlalchemy import Column, Integer, String, Date, Enum, func, ForeignKey, DECIMAL
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
 
 
 # revision identifiers, used by Alembic.
@@ -22,7 +22,7 @@ def upgrade() -> None:
     op.create_table('sets',
                     Column('id', Integer, primary_key=True, autoincrement=True),
                     Column('reps_count', Integer),
-                    Column('weight', DECIMAL(precision=3, scale=6)),
+                    Column('weight', Float),
                     Column('set_number', Integer),
                     Column('notes', String(150), nullable=True),
                     Column('workout_exercise_id', Integer, ForeignKey('workout_exercises.id'), nullable=False),
