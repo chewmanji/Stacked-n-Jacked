@@ -9,13 +9,10 @@ class SetBase(BaseModel):
     workout_exercise_id: int
 
 
-class SetCreate(SetBase):
-    user_id: int
-
-
 class Set(SetBase):
     id: int
-    user_id: int
+    workout_exercise_id: int
+
 
     class Config:
         from_attributes = True

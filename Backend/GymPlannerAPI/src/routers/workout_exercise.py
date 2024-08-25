@@ -7,8 +7,9 @@ import src.crud.workout as workout_service
 import src.crud.workout_exercise as workout_exercise_service
 import src.crud.set as set_service
 from src.schemas.user import User
-from src.schemas.workout_exercise import WorkoutExercise, WorkoutExerciseCreate, WorkoutExerciseBase, \
+from src.schemas.workout_exercise import WorkoutExercise, WorkoutExerciseBase, \
     WorkoutExerciseUpdate
+from src.schemas.set import Set
 from src.core.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/workout_exercises", tags=["Workout Exercise"])
@@ -31,9 +32,7 @@ def create_workout_exercise(current_user: Annotated[User, Depends(get_current_us
             detail="You do not have access to a workout that you try to assign exercise to."
         )
 
-    workout_exercise = WorkoutExerciseCreate(**workout_exercise_base.model_dump(),
-                                             user_id=current_user.id)
-    return workout_exercise_service.create_workout_exercise(db, workout_exercise)
+    return workout_exercise_service.create_workout_exercise(db, workout_exercise_base)
 
 
 @router.get("/{workout_exercise_id}", response_model=WorkoutExercise)
@@ -46,7 +45,7 @@ def get_workout_exercise(current_user: Annotated[User, Depends(get_current_user)
     return exercise
 
 
-@router.get("/{workout_exercise_id}/sets", response_model=WorkoutExercise)
+@router.get("/{workout_exercise_id}/sets", response_model=list[Set])
 def get_sets_by_workout_exercise_id(current_user: Annotated[User, Depends(get_current_user)],
                                     workout_exercise_id: Annotated[int, Path()], db: Session = Depends(get_db)):
     workout_exercises = workout_exercise_service.get_workout_exercises_by_user_id(db, current_user.id)
@@ -56,6 +55,9 @@ def get_sets_by_workout_exercise_id(current_user: Annotated[User, Depends(get_cu
         raise HTTPException(status_code=404, detail="Workout exercise not found")
 
     return set_service.get_sets_in_workout_exercise(db, workout_exercise_id)
+
+
+# TODO should this endpoint be there or in sets router, think about getting sets by exercise (NOT WORKOUT_EXERCISE)^^^
 
 
 @router.get("", response_model=list[WorkoutExercise])

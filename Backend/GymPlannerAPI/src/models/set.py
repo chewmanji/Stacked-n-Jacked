@@ -14,6 +14,5 @@ class Set(Base):
     set_number: Mapped[int] = mapped_column(Integer)
     notes: Mapped[str] = mapped_column(String(150), nullable=True)
     workout_exercise_id: Mapped[int] = mapped_column(Integer, ForeignKey('workout_exercises.id'), nullable=False)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), nullable=False)
 
     workout_exercise = relationship(WorkoutExercise)

@@ -7,14 +7,12 @@ class WorkoutExerciseBase(BaseModel):
     workout_id: int
 
 
-class WorkoutExerciseCreate(WorkoutExerciseBase):
-    user_id: int
-    workout_id: int
+# class WorkoutExerciseCreate(WorkoutExerciseBase):
+#     workout_id: int
 
 
 class WorkoutExercise(WorkoutExerciseBase):
     id: int
-
 
     class Config:
         from_attributes = True

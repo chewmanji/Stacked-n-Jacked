@@ -4,10 +4,11 @@ from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from src.models.workout_exercise import WorkoutExercise as WorkoutExerciseDB
-from src.schemas.workout_exercise import WorkoutExercise, WorkoutExerciseCreate
+from src.models.workout import Workout as WorkoutDB
+from src.schemas.workout_exercise import WorkoutExercise, WorkoutExerciseBase
 
 
-def create_workout_exercise(db: Session, workout_exercise: WorkoutExerciseCreate) -> WorkoutExerciseDB:
+def create_workout_exercise(db: Session, workout_exercise: WorkoutExerciseBase) -> WorkoutExerciseDB:
     workout_exercise_db = WorkoutExerciseDB(**workout_exercise.model_dump())
     db.add(workout_exercise_db)
     db.commit()
@@ -20,11 +21,16 @@ def get_workout_exercise_by_id(db: Session, exercise_id: int) -> WorkoutExercise
 
 
 def get_workout_exercises_by_workout_id(db: Session, workout_id: int) -> list[Type[WorkoutExerciseDB]]:
-    return db.query(WorkoutExerciseDB).filter(WorkoutExerciseDB.workout_id == workout_id).all()
+    return (db.query(WorkoutExerciseDB)
+            .filter(WorkoutExerciseDB.workout_id == workout_id)
+            .all())
 
 
 def get_workout_exercises_by_user_id(db: Session, user_id: int) -> list[Type[WorkoutExerciseDB]]:
-    return db.query(WorkoutExerciseDB).filter(WorkoutExerciseDB.user_id == user_id).all()
+    return (db.query(WorkoutExerciseDB)
+            .join(WorkoutExerciseDB.workout)
+            .where(WorkoutDB.user_id == user_id)
+            .all())
 
 
 def update_workout_exercise(db: Session, workout_exercise: WorkoutExercise) -> WorkoutExerciseDB | None:

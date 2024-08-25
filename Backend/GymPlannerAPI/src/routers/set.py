@@ -3,7 +3,7 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 
 from src.core.dependencies import get_db, get_current_user
-from src.schemas.set import Set, SetBase, SetCreate
+from src.schemas.set import Set, SetBase
 from src.schemas.user import User
 import src.crud.set as set_service
 import src.crud.workout_exercise as workout_exercise_service
@@ -28,9 +28,7 @@ def create_set(current_user: Annotated[User, Depends(get_current_user)],
             detail="You do not have access to a workout exercise that you try to assign set to."
         )
 
-    set = SetCreate(**set_base.model_dump(), user_id=current_user.id)
-
-    return set_service.create_set(db, set)
+    return set_service.create_set(db, set_base)
 
 
 @router.get("", response_model=list[Set])

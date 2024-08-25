@@ -39,6 +39,9 @@ def get_workout_exercises_in_workout(workout_id: int, current_user: Annotated[Us
     return workout_exercise_service.get_workout_exercises_by_workout_id(db, workout_id)
 
 
+# TODO should this endpoint be there???^^^
+
+
 @router.get("", response_model=list[Workout])
 def get_workouts(current_user: Annotated[UserDB, Depends(get_current_user)], db: Session = Depends(get_db)):
     return workout_service.get_workouts_by_user_id(db, current_user.id)

@@ -16,5 +16,4 @@ class User(Base):
     birth_date: Mapped[datetime.date] = mapped_column(Date)
     gender: Mapped[Gender] = mapped_column(Enum(Gender), default=Gender.Unknown)
 
-    workout_exercises = relationship("WorkoutExercise", back_populates="user")
     workouts = relationship("Workout", back_populates="user")
