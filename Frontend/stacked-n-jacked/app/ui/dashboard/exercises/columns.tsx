@@ -23,7 +23,7 @@ export const columns: ColumnDef<Exercise>[] = [
     },
   },
   {
-    accessorKey: "target_muscle",
+    accessorKey: "targetMuscle",
     header: ({ column }) => {
       return (
         <Button

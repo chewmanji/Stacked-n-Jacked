@@ -22,6 +22,7 @@ app.include_router(workout_exercise.router)
 app.include_router(workout.router)
 app.include_router(set.router)
 
+
 origins = ["http://localhost:3000"]
 
 app.add_middleware(

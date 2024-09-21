@@ -33,6 +33,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { Exercise } from "@/app/lib/definitions";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -65,6 +67,11 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const targetMuscles = data.map((row) => (row as Exercise).targetMuscle);
+
+  const uniqueTargetMuscles = Array.from(new Set(targetMuscles));
+  console.log(uniqueTargetMuscles); //rerenders 4 times???
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -76,6 +83,21 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+      </div>
+      <div className="flex-wrap items-center pb-4">
+        {uniqueTargetMuscles.map((targetMuscle) => {
+          return (
+            <Button
+              key={targetMuscle}
+              onClick={() =>
+                table.getColumn("targetMuscle")?.setFilterValue(targetMuscle)
+              }
+              className="focus:bg-white focus:text-black"
+            >
+              {targetMuscle}
+            </Button>
+          ); //to fix, implement "unclicking" filter -> but how? (state?)
+        })}
       </div>
       <div className="rounded-md border">
         <Table>
