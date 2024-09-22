@@ -26,9 +26,10 @@ import {
   DoubleArrowRightIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +47,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]); //change string[] to object with prop=targetMuscle and boolean value???
+
   const table = useReactTable({
     data,
     columns,
@@ -67,10 +70,24 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const targetMuscles = data.map((row) => (row as Exercise).targetMuscle);
+  const handleMuscleClick = (muscle: string) => {
+    setSelectedMuscles((prevSelectedMuscles) => {
+      if (prevSelectedMuscles.includes(muscle)) {
+        return prevSelectedMuscles.filter((m) => m !== muscle);
+      } else {
+        return [...prevSelectedMuscles, muscle];
+      }
+    });
+  };
+
+  const targetMuscles = data.map((row) => (row as Exercise).targetMuscle); //move it to server side???
 
   const uniqueTargetMuscles = Array.from(new Set(targetMuscles));
-  console.log(uniqueTargetMuscles); //rerenders 4 times???
+  //console.log(uniqueTargetMuscles); //rerenders 4 times???
+
+  useEffect(() => {
+    table.getColumn("targetMuscle")?.setFilterValue(selectedMuscles);
+  }, [selectedMuscles, table]);
 
   return (
     <div>
@@ -81,7 +98,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm bg-search-icon bg-no-repeat bg-right bg-black" //nie dziala tak jak chce z ikoną :///
         />
       </div>
       <div className="flex-wrap items-center pb-4">
@@ -89,14 +106,16 @@ export function DataTable<TData, TValue>({
           return (
             <Button
               key={targetMuscle}
-              onClick={() =>
-                table.getColumn("targetMuscle")?.setFilterValue(targetMuscle)
-              }
-              className="focus:bg-white focus:text-black"
+              onClick={() => handleMuscleClick(targetMuscle)}
+              className={`${
+                selectedMuscles.includes(targetMuscle)
+                  ? "text-black bg-yellow-600"
+                  : ""
+              } hover:text-black hover:bg-white`}
             >
               {targetMuscle}
             </Button>
-          ); //to fix, implement "unclicking" filter -> but how? (state?)
+          );
         })}
       </div>
       <div className="rounded-md border">

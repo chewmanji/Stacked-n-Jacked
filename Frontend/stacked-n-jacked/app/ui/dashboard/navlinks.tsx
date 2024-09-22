@@ -19,7 +19,7 @@ const links = [
     href: "/dashboard/exercises",
     icon: Dumbbell,
   },
-  { name: "Sessions", href: "/dashboard/sessions", icon: BadgeCheck },
+  { name: "Workouts", href: "/dashboard/workouts", icon: BadgeCheck },
   { name: "Your exercises", href: "/dashboard/user_exercises", icon: Award },
 ];
 

@@ -2,6 +2,6 @@ export type Exercise = {
   id: number;
   name: string;
   targetMuscle: string;
-  equipment: string | null;
-  youtubeUrl: string | null;
+  equipment: string | undefined;
+  youtubeUrl: string | undefined;
 };

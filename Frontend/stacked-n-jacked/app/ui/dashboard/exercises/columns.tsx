@@ -35,7 +35,9 @@ export const columns: ColumnDef<Exercise>[] = [
         </Button>
       );
     },
+    filterFn: "arrIncludesSome",
   },
+
   {
     accessorKey: "details",
     header: "Details",
@@ -43,9 +45,12 @@ export const columns: ColumnDef<Exercise>[] = [
       return (
         <div className="text-yellow-200">
           <Link
-            href={`/dashboard/exercises/${slugify(row.original.name, {
-              lower: true,
-            })}`}
+            href={{
+              pathname: `/dashboard/exercises/${slugify(row.original.name, {
+                lower: true,
+              })}`,
+              query: { id: row.original.id },
+            }}
           >
             Details
           </Link>

@@ -1,3 +1,3 @@
 export default function Page() {
-  return <p>Sessions page</p>;
+  return <p>Workouts page</p>;
 }

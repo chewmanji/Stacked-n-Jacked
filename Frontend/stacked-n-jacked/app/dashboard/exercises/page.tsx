@@ -5,8 +5,12 @@ import { columns } from "@/app/ui/dashboard/exercises/columns";
 export default async function Page() {
   const exercises = await fetchExercises();
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={exercises}></DataTable>
-    </div>
+    <>
+      {/* //how to make it more generic (in layout???) */}
+      <p className="text-3xl">Exercises</p>
+      <div className="container mx-auto py-10">
+        <DataTable columns={columns} data={exercises}></DataTable>
+      </div>
+    </>
   );
 }
