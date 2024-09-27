@@ -1,3 +1,5 @@
+import AccountCard from "@/app/ui/dashboard/account/account_card";
+
 export default function Page() {
-  return <p>Profile page</p>;
+  return <AccountCard></AccountCard>;
 }

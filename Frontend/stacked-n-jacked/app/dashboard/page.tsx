@@ -1,5 +1,5 @@
-import { Exercise } from "../lib/definitions";
+import {} from "../lib/definitions";
 
-export default function Page(exercise: Exercise) {
-  return <p>{exercise.name}</p>;
+export default function Page() {
+  return <p>Dashboard home</p>;
 }

@@ -26,7 +26,6 @@ import {
   DoubleArrowRightIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
-  MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 
 import { useEffect, useState } from "react";
@@ -36,15 +35,13 @@ import { Input } from "@/components/ui/input";
 
 import { Exercise } from "@/app/lib/definitions";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps {
+  columns: ColumnDef<Exercise, any>[];
+  data: Exercise[];
+  targetMuscles: string[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable({ columns, data, targetMuscles }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]); //change string[] to object with prop=targetMuscle and boolean value???
@@ -80,11 +77,6 @@ export function DataTable<TData, TValue>({
     });
   };
 
-  const targetMuscles = data.map((row) => (row as Exercise).targetMuscle); //move it to server side???
-
-  const uniqueTargetMuscles = Array.from(new Set(targetMuscles));
-  //console.log(uniqueTargetMuscles); //rerenders 4 times???
-
   useEffect(() => {
     table.getColumn("targetMuscle")?.setFilterValue(selectedMuscles);
   }, [selectedMuscles, table]);
@@ -98,20 +90,20 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm bg-search-icon bg-no-repeat bg-right bg-black" //nie dziala tak jak chce z ikoną :///
+          className="max-w-sm"
         />
       </div>
       <div className="flex-wrap items-center pb-4">
-        {uniqueTargetMuscles.map((targetMuscle) => {
+        {targetMuscles.map((targetMuscle) => {
           return (
             <Button
               key={targetMuscle}
               onClick={() => handleMuscleClick(targetMuscle)}
               className={`${
                 selectedMuscles.includes(targetMuscle)
-                  ? "text-black bg-yellow-600"
+                  ? "text-slate-800 text-foreground"
                   : ""
-              } hover:text-black hover:bg-white`}
+              } hover:text-slate-800 hover:bg-slate-300`}
             >
               {targetMuscle}
             </Button>

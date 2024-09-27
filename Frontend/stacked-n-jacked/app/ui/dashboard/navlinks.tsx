@@ -11,6 +11,7 @@ import {
   CircleUserRound,
   LogOut,
 } from "lucide-react";
+import { removeToken } from "@/app/actions/auth";
 
 const links = [
   { name: "Home", href: "/dashboard", icon: House },
@@ -36,9 +37,10 @@ export default function NavLinks() {
             key={link.name}
             href={link.href}
             className={clsx(
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-600 p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3",
+              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3",
               {
-                "bg-yellow-600 text-yellow-200": pathname === link.href,
+                "bg-secondary text-secondary-foreground":
+                  pathname === link.href,
               }
             )}
           >
@@ -51,21 +53,23 @@ export default function NavLinks() {
       <Link
         href={accoutnHref}
         className={clsx(
-          "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-600 p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3",
-          {
-            "bg-yellow-600 text-yellow-200": pathname === accoutnHref,
-          }
+          "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3"
         )}
       >
         <CircleUserRound />
         <p className="hidden md:block">Account</p>
       </Link>
-      <form>
-        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-600 p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3">
-          <LogOut />
-          <div className="hidden md:block">Sign Out</div>
-        </button>
-      </form>
+
+      <Link
+        onClick={() => removeToken()}
+        href="/"
+        className={clsx(
+          "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3"
+        )}
+      >
+        <LogOut />
+        <div className="hidden md:block">Sign Out</div>
+      </Link>
     </div>
   );
 }

@@ -56,9 +56,6 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      backgroundImage: {
-        "search-icon": "url(/img/search-icon.svg)",
-      },
     },
   },
   plugins: [require("tailwindcss-animate")],
