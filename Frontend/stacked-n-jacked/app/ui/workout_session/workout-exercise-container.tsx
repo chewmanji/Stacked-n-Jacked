@@ -10,15 +10,14 @@ import { SetsContainer } from "./set-container";
 
 export function WorkoutExerciseContainer({
   workoutEx,
-
   handleAddSet,
   handleRemoveSet,
+  handleEditSet,
 }: {
   workoutEx: WorkoutExercise;
-  workoutExercises: WorkoutExercise[];
-
-  handleAddSet: any;
-  handleRemoveSet: any;
+  handleAddSet: (workoutEx: WorkoutExercise) => void;
+  handleRemoveSet: (workoutEx: WorkoutExercise) => void;
+  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExercise) => void;
 }) {
   return (
     <AccordionItem value={workoutEx.exercise.name}>
@@ -27,7 +26,7 @@ export function WorkoutExerciseContainer({
       </AccordionTrigger>
       <AccordionContent>
         <div className="flex flex-col items-center space-y-2">
-          <SetsContainer workoutEx={workoutEx} />
+          <SetsContainer workoutEx={workoutEx} handleEditSet={handleEditSet} />
           <div className="flex flex-col space-y-2 items-center ">
             <Button
               onClick={() => {
@@ -38,7 +37,7 @@ export function WorkoutExerciseContainer({
             </Button>
             <Button
               size="sm"
-              variant="destructive"
+              variant="secondary"
               onClick={() => {
                 handleRemoveSet(workoutEx);
               }}

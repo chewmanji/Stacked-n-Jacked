@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-export async function signin(state: FormState, formData: FormData) {
+export async function signIn(state: FormState, formData: FormData) {
   const validatedFields = SigninFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -56,7 +56,7 @@ export async function signin(state: FormState, formData: FormData) {
   }
 }
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signUp(state: FormState, formData: FormData) {
   const genderData = z.coerce.number().parse(formData.get("gender"));
   const validatedFields = SignupFormSchema.safeParse({
     email: formData.get("email"),

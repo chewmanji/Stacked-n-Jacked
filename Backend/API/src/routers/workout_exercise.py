@@ -15,7 +15,7 @@ from src.core.dependencies import get_db, get_current_user
 router = APIRouter(prefix="/workout_exercises", tags=["Workout Exercise"])
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=WorkoutExerciseBase)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=WorkoutExercise)
 def create_workout_exercise(current_user: Annotated[User, Depends(get_current_user)],
                             workout_exercise_base: WorkoutExerciseBase, db: Session = Depends(get_db)):
     if not exercise_service.get_exercise_by_id(db, workout_exercise_base.exercise_id):

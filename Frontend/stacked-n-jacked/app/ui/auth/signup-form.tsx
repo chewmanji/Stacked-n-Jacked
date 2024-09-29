@@ -1,6 +1,6 @@
 "use client";
 
-import { signup } from "@/app/actions/auth";
+import { signUp } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 export function SignUpForm() {
-  const [state, action] = useFormState(signup, undefined);
+  const [state, action] = useFormState(signUp, undefined);
   useEffect(() => {
     if (state?.message) alert(state.message);
   }, [state]);

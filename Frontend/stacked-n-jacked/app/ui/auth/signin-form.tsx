@@ -1,6 +1,6 @@
 "use client";
 
-import { signin } from "@/app/actions/auth";
+import { signIn } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 export function SignInForm() {
-  const [state, action] = useFormState(signin, undefined);
+  const [state, action] = useFormState(signIn, undefined);
   useEffect(() => {
     if (state?.message) alert(state.message);
   }, [state]);

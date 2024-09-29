@@ -21,10 +21,19 @@ export enum Gender {
   Unknown = 2,
 }
 
+export enum WorkoutType {
+  FBW = "FBW",
+  Push = "Push",
+  Pull = "Pull",
+  Upper = "Upper",
+  Lower = "Lower",
+  Custom = "Custom",
+}
+
 export type Workout = {
   id?: number;
-  type?: string;
-  notes?: string;
+  type: string;
+  notes: string;
   workoutDate: Date;
 };
 

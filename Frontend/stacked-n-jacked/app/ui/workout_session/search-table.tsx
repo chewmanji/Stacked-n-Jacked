@@ -39,6 +39,10 @@ import {
 import { useTableConfig } from "@/app/hooks/useTableConfig";
 import { WorkoutExerciseContainer } from "@/app/ui/workout_session/workout-exercise-container";
 import { Accordion } from "@/components/ui/accordion";
+import { EditWorkoutSheet } from "./edit-workout-sheet";
+import { CancelWorkoutDialog } from "./cancel-workout-dialog";
+import { postWorkout } from "@/app/actions/post_workout";
+import { useRouter } from "next/navigation";
 
 export function SearchTable({
   columns,
@@ -49,13 +53,15 @@ export function SearchTable({
   data: Exercise[];
   targetMuscles: string[];
 }) {
+  const router = useRouter();
   const [selectedMuscle, setSelectedMuscle] = useState<string>();
   const { table } = useTableConfig(data, columns);
 
-  const [workout, setWorkout] = useState<Workout>(() => {
-    return { workoutDate: new Date() };
+  const [workout, setWorkout] = useState<Workout>({
+    workoutDate: new Date(),
+    notes: "",
+    type: "",
   });
-
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
     []
   );
@@ -97,7 +103,19 @@ export function SearchTable({
     setWorkoutExercises(updatedExercises);
   }
 
-  function handleEditSet(set: ExerciseSet, workoutEx: WorkoutExercise) {}
+  function handleEditSet(set: ExerciseSet, workoutEx: WorkoutExercise) {
+    const setsCopy = [...workoutEx.sets];
+    const index = setsCopy.findIndex((s) => s.setNumber === set.setNumber);
+    setsCopy[index] = set;
+
+    const updatedExercises = workoutExercises.map((ex) =>
+      ex.exercise.id === workoutEx.exercise.id
+        ? { ...ex, sets: [...setsCopy] }
+        : ex
+    );
+    setWorkoutExercises(updatedExercises);
+  }
+
   const handleMuscleClick = (muscle: string) => {
     switch (muscle) {
       case "reset":
@@ -109,28 +127,55 @@ export function SearchTable({
     }
   };
 
+  async function handleSaveWorkout() {
+    try {
+      await postWorkout(workout, workoutExercises);
+      router.replace("/dashboard");
+    } catch (error) {
+      console.error("Failed to save workout:", error);
+    }
+  }
+
   useEffect(() => {
     table.getColumn("targetMuscle")?.setFilterValue(selectedMuscle);
   }, [selectedMuscle, table]);
 
   return (
-    <div>
+    <div className="mx-2">
+      <div className="flex flex-col items-center  mb-6">
+        <h2 className="text-center text-lg">Workout</h2>
+        <EditWorkoutSheet workout={workout} setWorkout={setWorkout} />
+      </div>
+
       <div>
-        <p>Workout</p>
         <Accordion type="single" collapsible>
           {workoutExercises.map((workoutEx) => {
             return (
               <div key={workoutEx.exercise.id}>
                 <WorkoutExerciseContainer
                   workoutEx={workoutEx}
-                  workoutExercises={workoutExercises}
                   handleAddSet={handleAddSet}
                   handleRemoveSet={handleRemoveSet}
+                  handleEditSet={handleEditSet}
                 />
               </div>
             );
           })}
         </Accordion>
+      </div>
+      <div className="flex justify-between w-full px-4 mt-4">
+        <CancelWorkoutDialog />
+        <Button
+          onClick={() => {
+            handleSaveWorkout();
+            router.replace("/dashboard");
+          }}
+        >
+          Save
+        </Button>
+      </div>
+      <div className="flex flex-col items-center  mt-3">
+        <h2 className="text-center text-lg">Choose exercises</h2>
       </div>
       <div className="flex items-center py-4">
         <Input
@@ -139,7 +184,7 @@ export function SearchTable({
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w"
         />
       </div>
       <div className="flex-wrap items-center pb-4">
@@ -159,6 +204,7 @@ export function SearchTable({
           </SelectContent>
         </Select>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

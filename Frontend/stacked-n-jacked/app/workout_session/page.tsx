@@ -9,7 +9,7 @@ export default async function Page() {
   const muscles = Array.from(new Set(targetMuscles));
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-5 ">
       <SearchTable
         data={exercises ?? []}
         columns={columns}
