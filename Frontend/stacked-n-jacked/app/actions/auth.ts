@@ -22,7 +22,6 @@ export async function signin(state: FormState, formData: FormData) {
   }
 
   const { email, password } = validatedFields.data;
-  console.log(JSON.stringify({ username: email, password }));
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/token`,
@@ -40,6 +39,7 @@ export async function signin(state: FormState, formData: FormData) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60, //30 days
       path: "/",
     });
 
@@ -72,9 +72,6 @@ export async function signup(state: FormState, formData: FormData) {
   }
 
   const { email, password, gender, birthDate } = validatedFields.data;
-  console.log(
-    JSON.stringify({ email, password, gender, birth_date: birthDate })
-  );
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`,

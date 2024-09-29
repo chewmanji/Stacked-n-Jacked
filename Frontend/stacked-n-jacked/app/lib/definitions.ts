@@ -22,10 +22,27 @@ export enum Gender {
 }
 
 export type Workout = {
-  id: number;
-  type: string;
-  notes: string;
+  id?: number;
+  type?: string;
+  notes?: string;
   workoutDate: Date;
+};
+
+export type WorkoutExercise = {
+  id?: number;
+  notes?: string;
+  exercise: Exercise;
+  workout: Workout;
+  sets: ExerciseSet[];
+};
+
+export type ExerciseSet = {
+  id?: number;
+  repsCount: number;
+  weight: number;
+  setNumber: number;
+  notes?: string;
+  exercise: WorkoutExercise;
 };
 
 export const SigninFormSchema = z.object({

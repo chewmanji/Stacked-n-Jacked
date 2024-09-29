@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  getSortedRowModel,
-  ColumnFiltersState,
-  getFilteredRowModel,
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
 
 import {
   Table,
@@ -32,60 +22,119 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
-import { Exercise } from "@/app/lib/definitions";
+import {
+  Workout,
+  WorkoutExercise,
+  ExerciseSet,
+  Exercise,
+} from "@/app/lib/definitions";
+import { useTableConfig } from "@/app/hooks/useTableConfig";
+import { WorkoutExerciseContainer } from "@/app/ui/workout_session/workout-exercise-container";
+import { Accordion } from "@/components/ui/accordion";
 
-interface DataTableProps {
+export function SearchTable({
+  columns,
+  data,
+  targetMuscles,
+}: {
   columns: ColumnDef<Exercise, any>[];
   data: Exercise[];
   targetMuscles: string[];
-}
+}) {
+  const [selectedMuscle, setSelectedMuscle] = useState<string>();
+  const { table } = useTableConfig(data, columns);
 
-export function DataTable({ columns, data, targetMuscles }: DataTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]); //change string[] to object with prop=targetMuscle and boolean value???
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 20,
-        pageIndex: 0,
-      },
-    },
-    state: {
-      sorting,
-      columnFilters,
-    },
+  const [workout, setWorkout] = useState<Workout>(() => {
+    return { workoutDate: new Date() };
   });
 
+  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
+    []
+  );
+
+  function handleAddExercise(ex: Exercise) {
+    const exs = [...workoutExercises];
+    const workoutEx: WorkoutExercise = {
+      id: exs.length + 1,
+      exercise: ex,
+      workout: workout,
+      sets: [],
+    };
+    exs.push(workoutEx);
+    setWorkoutExercises(exs);
+  }
+
+  function handleAddSet(workoutEx: WorkoutExercise) {
+    const set: ExerciseSet = {
+      exercise: workoutEx,
+      repsCount: 0,
+      weight: 0,
+      setNumber: workoutEx.sets.length + 1,
+    };
+    const updatedExercises = workoutExercises.map((ex) =>
+      ex.exercise.id === workoutEx.exercise.id
+        ? { ...ex, sets: [...ex.sets, set] }
+        : ex
+    );
+
+    setWorkoutExercises(updatedExercises);
+  }
+
+  function handleRemoveSet(workoutEx: WorkoutExercise) {
+    const updatedExercises = workoutExercises.map((ex) =>
+      ex.exercise.id === workoutEx.exercise.id
+        ? { ...ex, sets: [...ex.sets.slice(0, -1)] }
+        : ex
+    );
+    setWorkoutExercises(updatedExercises);
+  }
+
+  function handleEditSet(set: ExerciseSet, workoutEx: WorkoutExercise) {}
   const handleMuscleClick = (muscle: string) => {
-    setSelectedMuscles((prevSelectedMuscles) => {
-      if (prevSelectedMuscles.includes(muscle)) {
-        return prevSelectedMuscles.filter((m) => m !== muscle);
-      } else {
-        return [...prevSelectedMuscles, muscle];
-      }
-    });
+    switch (muscle) {
+      case "reset":
+        setSelectedMuscle("");
+        break;
+      default:
+        setSelectedMuscle(muscle);
+        break;
+    }
   };
 
   useEffect(() => {
-    table.getColumn("targetMuscle")?.setFilterValue(selectedMuscles);
-  }, [selectedMuscles, table]);
+    table.getColumn("targetMuscle")?.setFilterValue(selectedMuscle);
+  }, [selectedMuscle, table]);
 
   return (
     <div>
+      <div>
+        <p>Workout</p>
+        <Accordion type="single" collapsible>
+          {workoutExercises.map((workoutEx) => {
+            return (
+              <div key={workoutEx.exercise.id}>
+                <WorkoutExerciseContainer
+                  workoutEx={workoutEx}
+                  workoutExercises={workoutExercises}
+                  handleAddSet={handleAddSet}
+                  handleRemoveSet={handleRemoveSet}
+                />
+              </div>
+            );
+          })}
+        </Accordion>
+      </div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter exercises..."
+          placeholder="Search exercise..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -94,21 +143,21 @@ export function DataTable({ columns, data, targetMuscles }: DataTableProps) {
         />
       </div>
       <div className="flex-wrap items-center pb-4">
-        {targetMuscles.map((targetMuscle) => {
-          return (
-            <Button
-              key={targetMuscle}
-              onClick={() => handleMuscleClick(targetMuscle)}
-              className={`${
-                selectedMuscles.includes(targetMuscle)
-                  ? "text-slate-800 text-foreground"
-                  : ""
-              } hover:text-slate-800 hover:bg-slate-300`}
-            >
-              {targetMuscle}
-            </Button>
-          );
-        })}
+        <Select onValueChange={handleMuscleClick} defaultValue="">
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by target muscle" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="reset">---</SelectItem>
+            {targetMuscles.map((targetMuscle) => {
+              return (
+                <SelectItem key={targetMuscle} value={targetMuscle}>
+                  {targetMuscle}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -145,6 +194,18 @@ export function DataTable({ columns, data, targetMuscles }: DataTableProps) {
                       )}
                     </TableCell>
                   ))}
+                  <TableCell key={row.original.id}>
+                    <div>
+                      <Button
+                        disabled={workoutExercises
+                          .map((e) => e.exercise.id)
+                          .includes(row.original.id)}
+                        onClick={() => handleAddExercise(row.original)} //probably to refactor -> remove row if included in exs
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
