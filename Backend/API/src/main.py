@@ -23,7 +23,7 @@ app.include_router(workout.router)
 app.include_router(set.router)
 
 
-origins = ["http://localhost:3000"]
+origins = ["http://localhost:3000", "https://stacked-n-jacked.wojtek.s.solvro.pl"]
 
 app.add_middleware(
     CORSMiddleware,
