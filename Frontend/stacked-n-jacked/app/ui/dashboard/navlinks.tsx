@@ -26,7 +26,6 @@ const links = [
 
 export default function NavLinks() {
   const pathname = usePathname();
-  const accoutnHref = "/dashboard/account";
 
   return (
     <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
@@ -51,7 +50,7 @@ export default function NavLinks() {
       })}
       <div className="hidden h-auto w-full grow rounded-md bg-black md:block"></div>
       <Link
-        href={accoutnHref}
+        href="/dashboard/account"
         className={clsx(
           "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3"
         )}
@@ -61,7 +60,9 @@ export default function NavLinks() {
       </Link>
 
       <Link
-        onClick={() => removeToken()}
+        onClick={async () => {
+          await removeToken();
+        }}
         href="/"
         className={clsx(
           "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground p-3 text-sm font-medium hover:bg-sky-100 hover:text-black md:flex-none md:justify-start md:p-2 md:px-3"

@@ -6,11 +6,11 @@ export async function fetchExercises(): Promise<Exercise[]> {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises?limit=1000`
   );
 
-  const data: any[] = await response.json();
+  const data = await response.json();
   return data.map((ex) => mapExerciseToCamelCase(ex));
 }
 
-export async function fetchExerciseDetails(id: Number): Promise<Exercise> {
+export async function fetchExerciseDetails(id: number): Promise<Exercise> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises/${id}`
   );
@@ -30,11 +30,11 @@ export async function fetchWorkouts(): Promise<Workout[]> {
     }
   );
 
-  const data: any[] = await response.json();
+  const data = await response.json();
   return data.map((w) => mapWorkoutToCamelCase(w));
 }
 
-function mapExerciseToCamelCase(data: any): Exercise {
+function mapExerciseToCamelCase(data): Exercise {
   const result: Exercise = {
     id: data.id,
     name: data.name,
@@ -45,7 +45,7 @@ function mapExerciseToCamelCase(data: any): Exercise {
   return result;
 }
 
-function mapWorkoutToCamelCase(data: any): Workout {
+function mapWorkoutToCamelCase(data): Workout {
   const result: Workout = {
     id: data.id,
     type: data.type,

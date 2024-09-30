@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "fastapi": "cd ..\\..\\Backend\\API\\ && set PYTHONIOENCODING=utf-8 && .venv\\Scripts\\activate && fastapi dev main.py",
+    "fastapi": "cd ..\\..\\Backend\\API\\ && set PYTHONIOENCODING=utf-8 && .venv\\Scripts\\activate && fastapi dev src\\main.py",
     "app": "concurrently --kill-others-on-fail \"next dev\" \"npm run fastapi\""
   },
   "dependencies": {
