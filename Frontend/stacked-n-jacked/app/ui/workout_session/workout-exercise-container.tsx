@@ -1,5 +1,5 @@
 "use client";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   AccordionContent,
   AccordionItem,
@@ -36,7 +36,7 @@ export function WorkoutExerciseContainer({
           </AccordionTrigger>
         </ContextMenuTrigger>
 
-        <ContextMenuContent className={`${buttonVariants}`}>
+        <ContextMenuContent className="bg-destructive">
           <ContextMenuItem
             onClick={() => {
               handleRemoveExercise(workoutEx);
