@@ -1,4 +1,9 @@
-import { Exercise, Workout } from "@/app/lib/definitions";
+import {
+  Exercise,
+  Workout,
+  WorkoutBackend,
+  ExerciseBackend,
+} from "@/app/lib/definitions";
 import { getToken } from "../actions/auth";
 
 export async function fetchExercises(): Promise<Exercise[]> {
@@ -6,7 +11,7 @@ export async function fetchExercises(): Promise<Exercise[]> {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises?limit=1000`
   );
 
-  const data = await response.json();
+  const data: ExerciseBackend[] = await response.json();
   return data.map((ex) => mapExerciseToCamelCase(ex));
 }
 
@@ -15,7 +20,7 @@ export async function fetchExerciseDetails(id: number): Promise<Exercise> {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises/${id}`
   );
 
-  const data = await response.json();
+  const data: ExerciseBackend = await response.json();
   return mapExerciseToCamelCase(data);
 }
 
@@ -30,11 +35,11 @@ export async function fetchWorkouts(): Promise<Workout[]> {
     }
   );
 
-  const data = await response.json();
+  const data: WorkoutBackend[] = await response.json();
   return data.map((w) => mapWorkoutToCamelCase(w));
 }
 
-function mapExerciseToCamelCase(data): Exercise {
+function mapExerciseToCamelCase(data: ExerciseBackend): Exercise {
   const result: Exercise = {
     id: data.id,
     name: data.name,
@@ -45,7 +50,7 @@ function mapExerciseToCamelCase(data): Exercise {
   return result;
 }
 
-function mapWorkoutToCamelCase(data): Workout {
+function mapWorkoutToCamelCase(data: WorkoutBackend): Workout {
   const result: Workout = {
     id: data.id,
     type: data.type,

@@ -6,10 +6,15 @@ import {
   getSortedRowModel,
   ColumnFiltersState,
   getFilteredRowModel,
+  ColumnDef,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { Exercise } from "../lib/definitions";
 
-export function useTableConfig(data: any[], columns: any[]) {
+export function useTableConfig(
+  data: unknown[],
+  columns: ColumnDef<Exercise | unknown>[]
+) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 

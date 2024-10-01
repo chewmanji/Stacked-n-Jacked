@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -16,7 +15,6 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -38,15 +36,15 @@ export function EditWorkoutSheet({
       <SheetTrigger asChild>
         <Button variant="outline">Edit</Button>
       </SheetTrigger>
-      <SheetContent className="bg-slate-900" side="bottom">
+      <SheetContent side="bottom" className="h-[500px]">
         <SheetHeader>
-          <SheetTitle className="text-foreground">Edit workout </SheetTitle>
+          <SheetTitle>Edit workout </SheetTitle>
           <SheetDescription>
-            Make changes to workout here. Click save when you're done.
+            Make changes to workout here. Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-5 items-center gap-4">
             <Label htmlFor="type" className="text-right">
               Type
             </Label>
@@ -54,7 +52,7 @@ export function EditWorkoutSheet({
               defaultValue={workout.type}
               onValueChange={(v) => setType(v)}
             >
-              <SelectTrigger className="col-span-3">
+              <SelectTrigger className="col-span-4">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -68,20 +66,21 @@ export function EditWorkoutSheet({
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-5 items-center gap-4">
             <Label htmlFor="notes" className="text-right">
               Notes
             </Label>
             <Textarea
               defaultValue={workout.notes}
               placeholder="Type your notes here."
-              className="col-span-3 w-full"
+              className="col-span-4 w-full"
               onBlur={(e) => setNotes(e.target.value)}
             />
           </div>
         </div>
         <SheetClose asChild>
           <Button
+            className="w-full"
             type="submit"
             onClick={() => {
               const workoutCopy = { ...workout };

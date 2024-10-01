@@ -18,10 +18,10 @@ export function CancelWorkoutDialog() {
       <AlertDialogTrigger asChild>
         <Button variant="outline">Cancel</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-slate-800">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription className="text-foreground">
+          <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
             workout data.
           </AlertDialogDescription>

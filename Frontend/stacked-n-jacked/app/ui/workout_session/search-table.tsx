@@ -49,7 +49,7 @@ export function SearchTable({
   data,
   targetMuscles,
 }: {
-  columns: ColumnDef<Exercise, any>[];
+  columns: ColumnDef<Exercise | unknown>[];
   data: Exercise[];
   targetMuscles: string[];
 }) {
@@ -75,6 +75,12 @@ export function SearchTable({
       sets: [],
     };
     exs.push(workoutEx);
+    setWorkoutExercises(exs);
+  }
+
+  function handleRemoveExercise(workoutEx: WorkoutExercise) {
+    const exs = workoutExercises.filter((ex) => ex.id !== workoutEx.id);
+    exs.forEach((ex, index) => (ex.id = index + 1));
     setWorkoutExercises(exs);
   }
 
@@ -157,6 +163,7 @@ export function SearchTable({
                   handleAddSet={handleAddSet}
                   handleRemoveSet={handleRemoveSet}
                   handleEditSet={handleEditSet}
+                  handleRemoveExercise={handleRemoveExercise}
                 />
               </div>
             );
@@ -227,33 +234,36 @@ export function SearchTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+              table.getRowModel().rows.map((row) => {
+                const rowData = row.original as Exercise;
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                    <TableCell key={rowData.id}>
+                      <div>
+                        <Button
+                          disabled={workoutExercises
+                            .map((e) => e.exercise.id)
+                            .includes(rowData.id)}
+                          onClick={() => handleAddExercise(rowData)} //probably to refactor -> remove row if included in exs
+                        >
+                          Add
+                        </Button>
+                      </div>
                     </TableCell>
-                  ))}
-                  <TableCell key={row.original.id}>
-                    <div>
-                      <Button
-                        disabled={workoutExercises
-                          .map((e) => e.exercise.id)
-                          .includes(row.original.id)}
-                        onClick={() => handleAddExercise(row.original)} //probably to refactor -> remove row if included in exs
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
                 <TableCell

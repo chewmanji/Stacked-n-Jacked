@@ -2,11 +2,9 @@ import { fetchExerciseDetails } from "@/app/lib/data";
 import {
   Table,
   TableBody,
-  TableHeader,
   TableHead,
   TableCell,
   TableRow,
-  TableCaption,
 } from "@/components/ui/table";
 
 export default async function Page({

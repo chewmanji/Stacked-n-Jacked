@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Exercise } from "@/app/lib/definitions";
 
 interface DataTableProps {
-  columns: ColumnDef<Exercise, any>[];
+  columns: ColumnDef<Exercise, unknown>[];
   data: Exercise[];
   targetMuscles: string[];
 }

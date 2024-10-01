@@ -1,13 +1,19 @@
 "use server";
 
-import { ExerciseSet, Workout, WorkoutExercise } from "../lib/definitions";
+import {
+  ExerciseSet,
+  Workout,
+  WorkoutBackend,
+  WorkoutExercise,
+  WorkoutExerciseBackend,
+} from "../lib/definitions";
 import { getToken } from "./auth";
 
 export async function postWorkout(
   workout: Workout,
   workoutExercises: WorkoutExercise[]
 ) {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); //to fix: stay on workout session view until all fetches complete
+  //await new Promise((resolve) => setTimeout(resolve, 3000)); //to fix: stay on workout session view until all fetches complete
   const token = await getToken();
   const type = workout.type ? workout.type : null;
   const response = await fetch(
@@ -28,7 +34,7 @@ export async function postWorkout(
     console.log(response);
     return;
   }
-  const data = await response.json();
+  const data: WorkoutBackend = await response.json();
   console.log(data);
   const workoutId: number = data.id;
 
@@ -59,7 +65,7 @@ async function postWorkoutExercises(
       console.log(response);
       return;
     }
-    const workoutExData = await response.json();
+    const workoutExData: WorkoutExerciseBackend = await response.json();
     const workoutExId: number = workoutExData.id;
     await postSets(workoutExId, workoutEx.sets, token ?? "");
   });

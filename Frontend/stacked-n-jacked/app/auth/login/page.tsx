@@ -19,7 +19,7 @@ export default function Page() {
           <SignInForm></SignInForm>
         </CardContent>
         <CardFooter className="text-sm justify-center">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/auth/register"
             className={`${buttonVariants({ variant: "link" })}`} //styling to fix
