@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DashboardButton } from "./ui/dashboard-button";
+import { HomePageButtons } from "./ui/dashboard-button";
 import { ModeToggle } from "./ui/mode-toggle";
 
 export default async function Home() {
@@ -10,16 +8,7 @@ export default async function Home() {
         <p className="font-bold text-xl">Stacked&Jacked</p>
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           Start tracking your gains today!
-          <div>
-            <Link href="/auth/login">
-              <Button>Sign in</Button>
-            </Link>
-
-            <Link href="/auth/register">
-              <Button>Sign up</Button>
-            </Link>
-          </div>
-          <DashboardButton />
+          <HomePageButtons />
           <ModeToggle />
         </div>
       </main>
