@@ -81,7 +81,7 @@ function mapWorkoutToCamelCase(data: WorkoutBackend): Workout {
   const result: Workout = {
     id: data.id,
     type: data.type,
-    workoutDate: data.workout_date,
+    workoutDate: new Date(data.workout_date),
     notes: data.notes,
   };
   return result;
