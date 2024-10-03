@@ -34,9 +34,12 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { ButtonLoading } from "../button-loading";
 
 export function SignUpForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
     resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
@@ -58,9 +61,20 @@ export function SignUpForm() {
         gender: genderData,
       });
       if (message) {
-        alert(message);
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: message.message,
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "You have successfully registered!",
+          duration: 2000,
+        });
       }
     }
+
     setIsSubmitting(false);
   }
 
@@ -180,9 +194,11 @@ export function SignUpForm() {
             </FormItem>
           )}
         ></FormField>
-        <Button disabled={isSubmitting} type="submit">
-          Register
-        </Button>
+        {isSubmitting ? (
+          <ButtonLoading />
+        ) : (
+          <Button type="submit">Register</Button>
+        )}
       </form>
     </Form>
   );

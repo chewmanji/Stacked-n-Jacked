@@ -23,13 +23,6 @@ export type User = {
   gender: Gender;
 };
 
-export type UserFormData = {
-  email: string;
-  password: string;
-  birthDate: Date;
-  gender: Gender;
-};
-
 export enum Gender {
   Male = 0,
   Female = 1,
