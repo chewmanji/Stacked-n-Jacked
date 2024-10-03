@@ -23,10 +23,17 @@ export type User = {
   gender: Gender;
 };
 
+export type UserFormData = {
+  email: string;
+  password: string;
+  birthDate: Date;
+  gender: Gender;
+};
+
 export enum Gender {
   Male = 0,
   Female = 1,
-  Unknown = 2,
+  Other = 2,
 }
 
 export enum WorkoutType {
@@ -85,25 +92,37 @@ export type ExerciseSetBackend = {
   workout_exercise_id: number;
 };
 
-export const SigninFormSchema = z.object({
+export const SignInFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }).trim(),
   password: z.string().trim(),
 });
 
-export const SignupFormSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
-  password: z
-    .string()
-    .min(8, { message: "Be at least 8 characters long" })
-    .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
-    .regex(/[0-9]/, { message: "Contain at least one number." })
-    .regex(/[^a-zA-Z0-9]/, {
-      message: "Contain at least one special character.",
-    })
-    .trim(),
-  gender: z.number(),
-  birthDate: z.string().date(),
-});
+export const SignUpFormSchema = z
+  .object({
+    email: z.string().email({ message: "Please enter a valid email." }).trim(),
+    password: z
+      .string()
+      .min(8, { message: "Be at least 8 characters long" })
+      .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
+      .regex(/[0-9]/, { message: "Contain at least one number." })
+      .regex(/[^a-zA-Z0-9]/, {
+        message: "Contain at least one special character.",
+      })
+      .trim(),
+    confirmPassword: z.string(),
+    gender: z.string(),
+    birthDate: z.date(),
+    isVerified: z.boolean().optional(),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "The passwords did not match",
+        path: ["confirmPassword"],
+      });
+    }
+  });
 
 export type FormState =
   | {

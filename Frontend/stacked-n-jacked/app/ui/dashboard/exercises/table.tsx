@@ -105,9 +105,9 @@ export function ExerciseTable({
               onClick={() => handleMuscleClick(targetMuscle)}
               className={`${
                 selectedMuscles.includes(targetMuscle)
-                  ? "text-slate-800 text-foreground"
+                  ? "text-primary bg-secondary"
                   : ""
-              } hover:text-slate-800 hover:bg-slate-300`}
+              } hover:text-secondary-foreground hover:bg-secondary`}
             >
               {targetMuscle}
             </Button>

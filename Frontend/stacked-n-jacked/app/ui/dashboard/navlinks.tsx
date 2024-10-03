@@ -28,7 +28,7 @@ export default function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
+    <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2 bg-secondary">
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
@@ -48,7 +48,7 @@ export default function NavLinks() {
           </Link>
         );
       })}
-      <div className="hidden h-auto w-full grow rounded-md bg-black md:block"></div>
+      <div className="hidden h-auto w-full grow rounded-md md:block"></div>
       <Link
         href="/dashboard/account"
         className={clsx(

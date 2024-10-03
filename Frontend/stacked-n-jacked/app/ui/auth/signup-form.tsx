@@ -3,73 +3,187 @@
 import { signUp } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+  SelectContent,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { SignUpFormSchema } from "@/app/lib/definitions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Gender } from "@/app/lib/definitions";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { useState } from "react";
 
 export function SignUpForm() {
-  const [state, action] = useFormState(signUp, undefined);
-  useEffect(() => {
-    if (state?.message) alert(state.message);
-  }, [state]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const form = useForm<z.infer<typeof SignUpFormSchema>>({
+    resolver: zodResolver(SignUpFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      gender: "2",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof SignUpFormSchema>) {
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      const genderData = z.coerce.number().parse(values.gender);
+      const message = await signUp({
+        email: values.email,
+        password: values.password,
+        birthDate: values.birthDate,
+        gender: genderData,
+      });
+      if (message) {
+        alert(message);
+      }
+    }
+    setIsSubmitting(false);
+  }
+
   return (
-    <form action={action} id="signup-form">
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" name="email" placeholder="Email" />
-      </div>
-      {state?.errors?.email && <p>{state.errors.email}</p>}
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Email" {...field} />
+              </FormControl>
+              <FormDescription>
+                Confirmation won&apos;t be required
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={form.control}
           name="password"
-          type="password"
-          placeholder="Password"
-        />
-      </div>
-      {state?.errors?.password && (
-        <div>
-          <p>Password must:</p>
-          <ul>
-            {state.errors.password.map((error) => (
-              <li key={error}>- {error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div>
-        <Label htmlFor="birthDate">Birth date</Label>
-        <Input id="birthDate" name="birthDate" type="date" />
-      </div>
-
-      <div>
-        <Label htmlFor="gender">Gender</Label>
-        <select id="gender" name="gender">
-          <option value="2">---</option>
-          <option value="0">Male</option>
-          <option value="1">Female</option>
-        </select>
-      </div>
-      <div className="flex justify-between w-full my-4">
-        <Link href="/">
-          <Button variant="outline">Go home</Button>
-        </Link>
-        {/*tried to use useRouter hook to router.back() but it didnt work - always returned to home page*/}
-
-        <SubmitButton></SubmitButton>
-      </div>
-    </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button disabled={pending} type="submit">
-      Register
-    </Button>
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder="Password" {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm password</FormLabel>
+              <FormControl>
+                <Input placeholder="Password" {...field} type="password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={form.control}
+          name="birthDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Birth date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-full" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    captionLayout="dropdown-buttons"
+                    fromYear={1900}
+                    toYear={new Date().getFullYear()}
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Gender</FormLabel>
+              <Select onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="col-span-4">
+                    <SelectValue placeholder="Gender" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.entries(Gender).map(([key, value]) => {
+                    if (isNaN(Number(key))) {
+                      return (
+                        <SelectItem key={key} value={`${value}`}>
+                          {key}
+                        </SelectItem>
+                      );
+                    }
+                  })}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        ></FormField>
+        <Button disabled={isSubmitting} type="submit">
+          Register
+        </Button>
+      </form>
+    </Form>
   );
 }

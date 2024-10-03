@@ -1,16 +1,12 @@
 "use server";
 
-import {
-  FormState,
-  SigninFormSchema,
-  SignupFormSchema,
-} from "../lib/definitions";
+import { FormState, SignInFormSchema, UserFormData } from "../lib/definitions";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import moment from "moment";
 
 export async function signIn(state: FormState, formData: FormData) {
-  const validatedFields = SigninFormSchema.safeParse({
+  const validatedFields = SignInFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
@@ -56,34 +52,19 @@ export async function signIn(state: FormState, formData: FormData) {
   }
 }
 
-export async function signUp(state: FormState, formData: FormData) {
-  const genderData = z.coerce.number().parse(formData.get("gender"));
-  const validatedFields = SignupFormSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-    gender: genderData,
-    birthDate: formData.get("birthDate"),
+export async function signUp(formData: UserFormData) {
+  const body = JSON.stringify({
+    email: formData.email,
+    password: formData.password,
+    gender: formData.gender,
+    birth_date: moment(formData.birthDate).format("YYYY-MM-DD"),
   });
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    };
-  }
-
-  const { email, password, gender, birthDate } = validatedFields.data;
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        gender,
-        birth_date: birthDate,
-      }),
+      body: body,
     }
   );
 
