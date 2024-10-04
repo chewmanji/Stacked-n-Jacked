@@ -14,7 +14,6 @@ export function HomePageButtons() {
     }
     checkToken();
   }, []);
-  console.log(hasToken);
 
   return hasToken ? (
     <>

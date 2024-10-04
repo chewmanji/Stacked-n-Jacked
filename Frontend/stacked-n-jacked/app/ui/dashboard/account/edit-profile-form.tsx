@@ -36,14 +36,15 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ButtonLoading } from "@/app/ui/button-loading";
+import { useRouter } from "next/navigation";
 
 export function EditProfileForm({ user }: { user: User }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof EditProfileFormSchema>>({
     resolver: zodResolver(EditProfileFormSchema),
     defaultValues: {
-      email: user.email,
       birthDate: user.birthDate,
       gender: user.gender.toString(),
     },
@@ -68,13 +69,14 @@ export function EditProfileForm({ user }: { user: User }) {
       } else {
         toast({
           title: "Success",
-          description: "You have successfully registered!",
+          description: "You have successfully updated your profile!",
           duration: 2000,
         });
       }
     }
 
     setIsSubmitting(false);
+    router.refresh();
   }
   return (
     <Form {...form}>
@@ -85,8 +87,9 @@ export function EditProfileForm({ user }: { user: User }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
+              <p className="italic">{user.email}</p>
               <FormControl>
-                <Input placeholder="New email" {...field} />
+                <Input placeholder="New email" {...field} type="email" />
               </FormControl>
               <FormDescription>Set new email</FormDescription>
               <FormMessage />
@@ -194,11 +197,13 @@ export function EditProfileForm({ user }: { user: User }) {
             </FormItem>
           )}
         ></FormField>
-        {isSubmitting ? (
-          <ButtonLoading />
-        ) : (
-          <Button type="submit">Update profile</Button>
-        )}
+        <div className="flex justify-end">
+          {isSubmitting ? (
+            <ButtonLoading />
+          ) : (
+            <Button type="submit">Update profile</Button>
+          )}
+        </div>
       </form>
     </Form>
   );

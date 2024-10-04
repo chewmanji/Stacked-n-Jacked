@@ -45,6 +45,22 @@ export type Workout = {
   workoutDate: Date;
 };
 
+export type WorkoutDetails = {
+  id: number;
+  type: string;
+  notes: string;
+  workoutDate: Date;
+  workoutExercises: WorkoutExercise[];
+};
+
+export type WorkoutDetailsBackend = {
+  id: number;
+  type: string;
+  notes: string;
+  workout_date: Date;
+  workout_exercises: WorkoutExerciseBackend[];
+};
+
 export type WorkoutBackend = {
   id: number;
   type: string;
@@ -56,7 +72,6 @@ export type WorkoutExercise = {
   id?: number;
   notes?: string;
   exercise: Exercise;
-  workout: Workout;
   sets: ExerciseSet[];
 };
 
@@ -65,6 +80,8 @@ export type WorkoutExerciseBackend = {
   notes?: string;
   exercise_id: number;
   workout_id: number;
+  sets: ExerciseSetBackend[];
+  exercise: ExerciseBackend;
 };
 
 export type ExerciseSet = {
@@ -73,7 +90,6 @@ export type ExerciseSet = {
   weight: number;
   setNumber: number;
   notes?: string;
-  exercise: WorkoutExercise;
 };
 
 export type ExerciseSetBackend = {

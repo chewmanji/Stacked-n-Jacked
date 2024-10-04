@@ -4,6 +4,9 @@ import {
   WorkoutBackend,
   ExerciseBackend,
   User,
+  WorkoutDetailsBackend,
+  WorkoutDetails,
+  WorkoutExercise,
 } from "@/app/lib/definitions";
 import { getToken } from "../actions/auth";
 
@@ -38,6 +41,37 @@ export async function fetchWorkouts(): Promise<Workout[]> {
 
   const data: WorkoutBackend[] = await response.json();
   return data.map((w) => mapWorkoutToCamelCase(w));
+}
+
+export async function fetchWorkoutDetails(id: number): Promise<WorkoutDetails> {
+  const token = await getToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/workouts/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const data: WorkoutDetailsBackend = await response.json();
+  const workoutExs: WorkoutExercise[] = data.workout_exercises.map((wEx) => ({
+    id: wEx.id,
+    exercise: mapExerciseToCamelCase(wEx.exercise),
+    sets: wEx.sets.map((s) => ({
+      id: s.id,
+      repsCount: s.reps_count,
+      weight: s.weight ?? 0,
+      setNumber: s.set_number,
+    })),
+  }));
+  const workout: WorkoutDetails = {
+    id: data.id,
+    type: data.type,
+    notes: data.notes,
+    workoutDate: data.workout_date,
+    workoutExercises: workoutExs,
+  };
+  return workout;
 }
 
 export async function fetchCurrentUser(): Promise<User> {

@@ -79,6 +79,7 @@ export async function editProfile(formData: {
   birthDate?: Date;
   gender?: Gender;
 }): Promise<{ message: string } | void> {
+  const token = await getToken();
   const body = JSON.stringify({
     email: formData.email,
     password: formData.newPassword,
@@ -86,16 +87,22 @@ export async function editProfile(formData: {
     birth_date: moment(formData.birthDate).format("YYYY-MM-DD"),
   });
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/`, //add endpoint to update user data
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`,
     {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       body: body,
     }
   );
 
   if (response.ok) {
-    redirect("/auth/login");
+    if (formData.newPassword || formData.email) {
+      redirect("/auth/login");
+    }
+    return;
   } else {
     const error = await response.json();
     return {
