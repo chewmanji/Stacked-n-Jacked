@@ -38,7 +38,7 @@ function WorkoutExerciseTable({
   workoutExercise: WorkoutExercise;
 }) {
   const totalVolume: number = workoutExercise.sets.reduce(
-    (total, currentSet) => total + currentSet.weight,
+    (total, currentSet) => total + currentSet.weight * currentSet.repsCount,
     0
   );
   return (

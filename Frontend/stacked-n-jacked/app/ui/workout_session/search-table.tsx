@@ -43,6 +43,8 @@ import { EditWorkoutSheet } from "./edit-workout-sheet";
 import { CancelWorkoutDialog } from "./cancel-workout-dialog";
 import { postWorkout } from "@/app/actions/post_workout";
 import { useRouter } from "next/navigation";
+import { ButtonLoading } from "../button-loading";
+import { useToast } from "@/hooks/use-toast";
 
 export function SearchTable({
   columns,
@@ -54,8 +56,10 @@ export function SearchTable({
   targetMuscles: string[];
 }) {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedMuscle, setSelectedMuscle] = useState<string>();
   const { table } = useTableConfig(data, columns);
+  const { toast } = useToast();
 
   const [workout, setWorkout] = useState<Workout>({
     workoutDate: new Date(),
@@ -134,12 +138,26 @@ export function SearchTable({
   };
 
   async function handleSaveWorkout() {
-    try {
-      await postWorkout(workout, workoutExercises);
-      router.replace("/dashboard");
-    } catch (error) {
-      console.error("Failed to save workout:", error);
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      const message = await postWorkout(workout, workoutExercises);
+      if (message) {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: message.message,
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Workout saved!",
+          duration: 2000,
+        });
+        router.replace("/dashboard");
+      }
     }
+
+    setIsSubmitting(false);
   }
 
   useEffect(() => {
@@ -172,14 +190,11 @@ export function SearchTable({
       </div>
       <div className="flex justify-between w-full px-4 mt-4">
         <CancelWorkoutDialog />
-        <Button
-          onClick={() => {
-            handleSaveWorkout();
-            router.replace("/dashboard");
-          }}
-        >
-          Save
-        </Button>
+        {isSubmitting ? (
+          <ButtonLoading />
+        ) : (
+          <Button onClick={async () => await handleSaveWorkout()}>Save</Button>
+        )}
       </div>
       <div className="flex flex-col items-center  mt-3">
         <h2 className="text-center text-lg">Choose exercises</h2>

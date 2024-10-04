@@ -31,8 +31,10 @@ export async function postWorkout(
     }
   );
   if (!response.ok) {
-    console.log(response);
-    return;
+    const error = await response.json();
+    return {
+      message: error.detail,
+    };
   }
   const data: WorkoutBackend = await response.json();
   console.log(data);
