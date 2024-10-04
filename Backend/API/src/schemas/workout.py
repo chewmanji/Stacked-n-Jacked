@@ -3,6 +3,7 @@ import datetime
 from pydantic import BaseModel, Field
 
 from src.models.enums import TrainingType
+from src.schemas.workout_exercise import WorkoutExerciseDetails
 
 
 class WorkoutBase(BaseModel):
@@ -20,6 +21,10 @@ class Workout(WorkoutBase):
 
     class Config:
         from_attributes = True
+
+
+class WorkoutDetails(Workout):
+    workout_exercises: list[WorkoutExerciseDetails] = []
 
 
 class WorkoutUpdate(BaseModel):

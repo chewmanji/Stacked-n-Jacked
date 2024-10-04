@@ -16,3 +16,4 @@ class WorkoutExercise(Base):
 
     exercise = relationship(Exercise)
     workout = relationship(Workout)
+    sets = relationship('Set', back_populates='workout_exercise')

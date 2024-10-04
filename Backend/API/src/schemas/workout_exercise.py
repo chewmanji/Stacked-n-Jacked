@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field
+from src.schemas.set import Set
+from src.schemas.exercise import ExerciseBase
 
 
 class WorkoutExerciseBase(BaseModel):
@@ -16,6 +18,11 @@ class WorkoutExercise(WorkoutExerciseBase):
 
     class Config:
         from_attributes = True
+
+
+class WorkoutExerciseDetails(WorkoutExercise):
+    sets: list[Set]
+    exercise: ExerciseBase
 
 
 class WorkoutExerciseUpdate(BaseModel):

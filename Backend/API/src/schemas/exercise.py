@@ -3,9 +3,12 @@ import re
 from pydantic import BaseModel, HttpUrl, Field, field_validator
 
 
-class Exercise(BaseModel):
+class ExerciseBase(BaseModel):
     id: int
     name: str
+
+
+class Exercise(ExerciseBase):
     target_muscle: str
     equipment: str | None = None
     youtube_url: HttpUrl | None = Field(default=None, description="URL to Youtube video tutorial for an exercise",

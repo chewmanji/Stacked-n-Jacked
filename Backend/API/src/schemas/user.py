@@ -21,3 +21,11 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
+
+class UserUpdate(BaseModel):
+    id: int | None = None
+    email: EmailStr | None = None
+    password: str | None = None
+    birth_date: datetime.date | None = None
+    gender: Gender | None = None
