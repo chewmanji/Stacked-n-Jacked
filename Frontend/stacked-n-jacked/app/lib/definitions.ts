@@ -73,6 +73,7 @@ export type WorkoutExercise = {
   notes?: string;
   exercise: Exercise;
   sets: ExerciseSet[];
+  workout?: Workout;
 };
 
 export type WorkoutExerciseBackend = {
@@ -90,6 +91,7 @@ export type ExerciseSet = {
   weight: number;
   setNumber: number;
   notes?: string;
+  exercise?: WorkoutExercise;
 };
 
 export type ExerciseSetBackend = {
