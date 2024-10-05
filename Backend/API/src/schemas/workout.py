@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import  Field
+from pydantic import Field
 
 from src.models.enums import TrainingType
 from src.schemas.workout_exercise import WorkoutExerciseDetails, WorkoutExerciseCreate
@@ -10,11 +10,6 @@ from src.schemas.base_schema import BaseSchema
 class WorkoutBase(BaseSchema):
     type: TrainingType | None = None
     notes: str | None = Field(max_length=1000)
-    workout_exercises: list[WorkoutExerciseCreate] = []
-
-
-class WorkoutCreate(WorkoutBase):
-    user_id: int
 
 
 class Workout(WorkoutBase):
@@ -27,6 +22,14 @@ class Workout(WorkoutBase):
 
 class WorkoutDetails(Workout):
     workout_exercises: list[WorkoutExerciseDetails] = []
+
+
+class WorkoutDetailsBase(WorkoutBase):
+    workout_exercises: list[WorkoutExerciseCreate] = []
+
+
+class WorkoutCreate(WorkoutDetailsBase):
+    user_id: int
 
 
 class WorkoutUpdate(BaseSchema):

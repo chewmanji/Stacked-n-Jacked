@@ -4,14 +4,37 @@ from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from src.models.workout import Workout as WorkoutDB
+from src.models.workout_exercise import WorkoutExercise as WorkoutExerciseDB
+from src.models.set import Set as SetDB
 from src.schemas.workout import WorkoutCreate, Workout
 
 
 def create_workout(db: Session, workout: WorkoutCreate) -> WorkoutDB | None:
-    workout_db = WorkoutDB(**workout.model_dump())
+    #TODO do refactoru? wydzielić do osobnych funckji to co jest w forach
+    workout_db = WorkoutDB(
+        type=workout.type,
+        notes=workout.notes,
+        user_id=workout.user_id
+    )
     db.add(workout_db)
     db.commit()
-    db.refresh(workout_db)
+    for workout_ex in workout.workout_exercises:
+        workout_ex_db = WorkoutExerciseDB(
+            exercise_id=workout_ex.exercise_id,
+            workout_id=workout_db.id
+        )
+        db.add(workout_ex_db)
+        db.commit()
+        for set in workout_ex.sets:
+            set_db = SetDB(
+                reps_count=set.reps_count,
+                weight=set.weight,
+                set_number=set.set_number,
+                workout_exercise_id=workout_ex_db.id
+            )
+            db.add(set_db)
+            db.commit()
+
     return workout_db
 
 

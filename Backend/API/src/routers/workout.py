@@ -4,7 +4,7 @@ from typing import Annotated
 
 import src.crud.workout as workout_service
 import src.crud.workout_exercise as workout_exercise_service
-from src.schemas.workout import Workout, WorkoutBase, WorkoutCreate, WorkoutUpdate, WorkoutDetails
+from src.schemas.workout import Workout, WorkoutCreate, WorkoutUpdate, WorkoutDetails, WorkoutDetailsBase
 from src.schemas.workout_exercise import WorkoutExercise
 from src.models.user import User as UserDB
 from src.core.dependencies import get_db, get_current_user
@@ -12,12 +12,11 @@ from src.core.dependencies import get_db, get_current_user
 router = APIRouter(prefix="/workouts", tags=["Workout"])
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=Workout | None)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=WorkoutDetails | None)
 def create_workout(current_user: Annotated[UserDB, Depends(get_current_user)],
-                   workout: WorkoutBase, db: Session = Depends(get_db)):
-    print(workout)
+                   workout: WorkoutDetailsBase, db: Session = Depends(get_db)):
     workout = WorkoutCreate(**workout.model_dump(), user_id=current_user.id)
-    return workout#workout_service.create_workout(db, workout)
+    return workout_service.create_workout(db, workout)
 
 
 @router.get("", response_model=list[Workout])
