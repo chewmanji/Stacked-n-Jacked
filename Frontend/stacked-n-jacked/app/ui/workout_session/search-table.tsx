@@ -270,7 +270,7 @@ export function SearchTable({
                           disabled={workoutExercises
                             .map((e) => e.exercise.id)
                             .includes(rowData.id)}
-                          onClick={() => handleAddExercise(rowData)} //probably to refactor -> remove row if included in exs
+                          onClick={() => handleAddExercise(rowData)}
                         >
                           Add
                         </Button>

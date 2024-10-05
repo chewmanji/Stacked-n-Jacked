@@ -8,14 +8,6 @@ export type Exercise = {
   youtubeUrl: string | null;
 };
 
-// export type ExerciseBackend = {
-//   id: number;
-//   name: string;
-//   target_muscle: string;
-//   equipment: string | null;
-//   youtube_url: string | null;
-// };
-
 export type User = {
   id: number;
   email: string;
@@ -53,21 +45,6 @@ export type WorkoutDetails = {
   workoutExercises: WorkoutExercise[];
 };
 
-// export type WorkoutDetailsBackend = {
-//   id: number;
-//   type: string;
-//   notes: string;
-//   workout_date: Date;
-//   workout_exercises: WorkoutExerciseBackend[];
-// };
-
-// export type WorkoutBackend = {
-//   id: number;
-//   type: string;
-//   notes: string;
-//   workout_date: Date;
-// };
-
 export type WorkoutExercise = {
   id?: number;
   notes?: string;
@@ -75,15 +52,6 @@ export type WorkoutExercise = {
   sets: ExerciseSet[];
   workout?: Workout;
 };
-
-// export type WorkoutExerciseBackend = {
-//   id: number;
-//   notes?: string;
-//   exercise_id: number;
-//   workout_id: number;
-//   sets: ExerciseSetBackend[];
-//   exercise: ExerciseBackend;
-// };
 
 export type ExerciseSet = {
   id?: number;
@@ -93,15 +61,6 @@ export type ExerciseSet = {
   notes?: string;
   exercise?: WorkoutExercise;
 };
-
-// export type ExerciseSetBackend = {
-//   id: number;
-//   reps_count: number;
-//   weight: number | null;
-//   set_number: number;
-//   notes: string | null;
-//   workout_exercise_id: number;
-// };
 
 export const SignInFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }).trim(),

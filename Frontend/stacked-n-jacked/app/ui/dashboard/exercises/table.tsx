@@ -48,7 +48,7 @@ export function ExerciseTable({
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]); //change string[] to object with prop=targetMuscle and boolean value???
+  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
 
   const table = useReactTable({
     data,

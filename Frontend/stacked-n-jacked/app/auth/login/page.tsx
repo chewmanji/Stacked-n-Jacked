@@ -22,7 +22,7 @@ export default function Page() {
           Don&apos;t have an account?{" "}
           <Link
             href="/auth/register"
-            className={`${buttonVariants({ variant: "link" })}`} //styling to fix
+            className={`${buttonVariants({ variant: "link" })}`}
           >
             Register
           </Link>{" "}
