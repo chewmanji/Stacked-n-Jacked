@@ -1,3 +1,4 @@
+import datetime
 from pydantic import Field
 from src.schemas.set import Set, SetCreate
 from src.schemas.exercise import ExerciseBase
@@ -20,6 +21,12 @@ class WorkoutExercise(WorkoutExerciseBase):
 class WorkoutExerciseDetails(WorkoutExercise):
     sets: list[Set]
     exercise: ExerciseBase
+
+
+class WorkoutExerciseDetailsChart(BaseSchema):
+    workout_exercise_id: int
+    workout_date: datetime.date | None = None
+    sets: list[Set]
 
 
 class WorkoutExerciseCreate(BaseSchema):

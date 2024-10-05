@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.models.workout_exercise import WorkoutExercise as WorkoutExerciseDB
 from src.models.workout import Workout as WorkoutDB
+from src.models.exercise import Exercise as ExerciseDB
 from src.schemas.workout_exercise import WorkoutExercise, WorkoutExerciseBase
 
 
@@ -47,3 +48,20 @@ def delete_workout_exercise(db: Session, workout_exercise_id: int) -> None:
     db_workout_exercise = db.query(WorkoutExerciseDB).get(workout_exercise_id)
     db.delete(db_workout_exercise)
     db.commit()
+
+
+def get_exercises_from_workout_exercises(db: Session, user_id: int) -> list[Type[ExerciseDB]]:
+    return (db.query(ExerciseDB)
+            .join(WorkoutExerciseDB)
+            .join(WorkoutDB)
+            .where(WorkoutDB.user_id == user_id)
+            .all())
+
+
+def get_workout_exercises_by_exercise_id(db: Session, user_id: int, exercise_id: int) -> list[Type[WorkoutExerciseDB]]:
+    return (db.query(WorkoutExerciseDB)
+            .join(ExerciseDB)
+            .where(ExerciseDB.id == exercise_id)
+            .join(WorkoutDB)
+            .where(WorkoutDB.user_id == user_id)
+            .all())
