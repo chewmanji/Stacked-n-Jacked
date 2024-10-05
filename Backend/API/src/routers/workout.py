@@ -12,11 +12,12 @@ from src.core.dependencies import get_db, get_current_user
 router = APIRouter(prefix="/workouts", tags=["Workout"])
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, response_model=Workout)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=Workout | None)
 def create_workout(current_user: Annotated[UserDB, Depends(get_current_user)],
-                   workout_base: WorkoutBase, db: Session = Depends(get_db)):
-    workout = WorkoutCreate(**workout_base.model_dump(), user_id=current_user.id)
-    return workout_service.create_workout(db, workout)
+                   workout: WorkoutBase, db: Session = Depends(get_db)):
+    print(workout)
+    workout = WorkoutCreate(**workout.model_dump(), user_id=current_user.id)
+    return workout#workout_service.create_workout(db, workout)
 
 
 @router.get("", response_model=list[Workout])

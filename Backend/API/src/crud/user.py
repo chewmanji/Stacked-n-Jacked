@@ -24,7 +24,6 @@ def get_user_by_email(db: Session, email: str) -> UserDB | None:
 
 
 def update_user(db: Session, user_data: UserUpdate) -> UserDB | None:
-    print(user_data)
     if user_data.password:
         hashed_password = get_password_hash(user_data.password)
         stmt = (update(UserDB)

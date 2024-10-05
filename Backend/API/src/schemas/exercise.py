@@ -1,9 +1,10 @@
 import re
 
-from pydantic import BaseModel, HttpUrl, Field, field_validator
+from pydantic import HttpUrl, Field, field_validator
+from src.schemas.base_schema import BaseSchema
 
 
-class ExerciseBase(BaseModel):
+class ExerciseBase(BaseSchema):
     id: int
     name: str
 

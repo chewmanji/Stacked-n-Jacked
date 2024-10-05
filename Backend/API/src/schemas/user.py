@@ -1,11 +1,12 @@
 import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
+from src.schemas.base_schema import BaseSchema
 
 from src.models.enums import Gender
 
 
-class UserBase(BaseModel):
+class UserBase(BaseSchema):
     email: EmailStr
     birth_date: datetime.date
     gender: Gender | None = None
@@ -18,12 +19,11 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
 
-
     class Config:
         from_attributes = True
 
 
-class UserUpdate(BaseModel):
+class UserUpdate(BaseSchema):
     id: int | None = None
     email: EmailStr | None = None
     password: str | None = None

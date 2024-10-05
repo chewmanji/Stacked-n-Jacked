@@ -31,7 +31,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 def update_user(current_user: Annotated[User, Depends(get_current_user)], user_data: UserUpdate,
                 db: Session = Depends(get_db)):
     user_with_email = user_service.get_user_by_email(db, email=user_data.email)
-    if user_with_email:
+    if user_with_email and user_data.email != current_user.email:
         raise HTTPException(status_code=409, detail="Email already registered")
 
     model_user = UserUpdate(**current_user.dict())
