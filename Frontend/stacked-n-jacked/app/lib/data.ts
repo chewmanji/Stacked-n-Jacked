@@ -1,13 +1,4 @@
-import {
-  Exercise,
-  Workout,
-  WorkoutBackend,
-  ExerciseBackend,
-  User,
-  WorkoutDetailsBackend,
-  WorkoutDetails,
-  WorkoutExercise,
-} from "@/app/lib/definitions";
+import { Exercise, Workout, User, WorkoutDetails } from "@/app/lib/definitions";
 import { getToken } from "../actions/auth";
 
 export async function fetchExercises(): Promise<Exercise[]> {
@@ -15,8 +6,8 @@ export async function fetchExercises(): Promise<Exercise[]> {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises?limit=1000`
   );
 
-  const data: ExerciseBackend[] = await response.json();
-  return data.map((ex) => mapExerciseToCamelCase(ex));
+  const data: Exercise[] = await response.json();
+  return data;
 }
 
 export async function fetchExerciseDetails(id: number): Promise<Exercise> {
@@ -24,8 +15,8 @@ export async function fetchExerciseDetails(id: number): Promise<Exercise> {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/exercises/${id}`
   );
 
-  const data: ExerciseBackend = await response.json();
-  return mapExerciseToCamelCase(data);
+  const data: Exercise = await response.json();
+  return data;
 }
 
 export async function fetchWorkouts(): Promise<Workout[]> {
@@ -39,8 +30,8 @@ export async function fetchWorkouts(): Promise<Workout[]> {
     }
   );
 
-  const data: WorkoutBackend[] = await response.json();
-  return data.map((w) => mapWorkoutToCamelCase(w));
+  const data: Workout[] = await response.json();
+  return data;
 }
 
 export async function fetchWorkoutDetails(id: number): Promise<WorkoutDetails> {
@@ -53,25 +44,25 @@ export async function fetchWorkoutDetails(id: number): Promise<WorkoutDetails> {
       },
     }
   );
-  const data: WorkoutDetailsBackend = await response.json();
-  const workoutExs: WorkoutExercise[] = data.workout_exercises.map((wEx) => ({
-    id: wEx.id,
-    exercise: mapExerciseToCamelCase(wEx.exercise),
-    sets: wEx.sets.map((s) => ({
-      id: s.id,
-      repsCount: s.reps_count,
-      weight: s.weight ?? 0,
-      setNumber: s.set_number,
-    })),
-  }));
-  const workout: WorkoutDetails = {
-    id: data.id,
-    type: data.type,
-    notes: data.notes,
-    workoutDate: data.workout_date,
-    workoutExercises: workoutExs,
-  };
-  return workout;
+  const data: WorkoutDetails = await response.json();
+  // const workoutExs: WorkoutExercise[] = data.workout_exercises.map((wEx) => ({
+  //   id: wEx.id,
+  //   exercise: mapExerciseToCamelCase(wEx.exercise),
+  //   sets: wEx.sets.map((s) => ({
+  //     id: s.id,
+  //     repsCount: s.reps_count,
+  //     weight: s.weight ?? 0,
+  //     setNumber: s.set_number,
+  //   })),
+  // }));
+  // const workout: WorkoutDetails = {
+  //   id: data.id,
+  //   type: data.type,
+  //   notes: data.notes,
+  //   workoutDate: data.workout_date,
+  //   workoutExercises: workoutExs,
+  // };
+  return data;
 }
 
 export async function fetchCurrentUser(): Promise<User> {
@@ -85,38 +76,28 @@ export async function fetchCurrentUser(): Promise<User> {
     }
   );
 
-  const data: {
-    email: string;
-    birth_date: string;
-    gender: number;
-    id: number;
-  } = await response.json();
+  const data: User = await response.json();
 
-  return {
-    email: data.email,
-    birthDate: new Date(data.birth_date),
-    gender: data.gender,
-    id: data.id,
-  };
+  return data;
 }
 
-function mapExerciseToCamelCase(data: ExerciseBackend): Exercise {
-  const result: Exercise = {
-    id: data.id,
-    name: data.name,
-    equipment: data.equipment,
-    youtubeUrl: data.youtube_url,
-    targetMuscle: data.target_muscle,
-  };
-  return result;
-}
+// function mapExerciseToCamelCase(data: Exercise): Exercise {
+//   const result: Exercise = {
+//     id: data.id,
+//     name: data.name,
+//     equipment: data.equipment,
+//     youtubeUrl: data.youtube_url,
+//     targetMuscle: data.target_muscle,
+//   };
+//   return result;
+// }
 
-function mapWorkoutToCamelCase(data: WorkoutBackend): Workout {
-  const result: Workout = {
-    id: data.id,
-    type: data.type,
-    workoutDate: new Date(data.workout_date),
-    notes: data.notes,
-  };
-  return result;
-}
+// function mapWorkoutToCamelCase(data: Workout): Workout {
+//   const result: Workout = {
+//     id: data.id,
+//     type: data.type,
+//     workoutDate: new Date(data.workout_date),
+//     notes: data.notes,
+//   };
+//   return result;
+// }

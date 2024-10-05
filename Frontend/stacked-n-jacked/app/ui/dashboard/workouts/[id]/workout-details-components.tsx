@@ -51,13 +51,15 @@ function WorkoutExerciseTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {workoutExercise.sets.map((set) => (
-          <TableRow key={set.id}>
-            <TableCell>{set.setNumber}.</TableCell>
-            <TableCell>{set.repsCount}</TableCell>
-            <TableCell className="text-right">{set.weight} kg</TableCell>
-          </TableRow>
-        ))}
+        {workoutExercise.sets
+          .sort((a, b) => a.setNumber - b.setNumber)
+          .map((set) => (
+            <TableRow key={set.id}>
+              <TableCell>{set.setNumber}.</TableCell>
+              <TableCell>{set.repsCount}</TableCell>
+              <TableCell className="text-right">{set.weight} kg</TableCell>
+            </TableRow>
+          ))}
       </TableBody>
       <TableFooter>
         <TableRow>
