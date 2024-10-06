@@ -5,7 +5,6 @@ import moment from "moment";
 
 export default async function Page({ params }: { params: { id: number } }) {
   const workoutDetails = await fetchWorkoutDetails(params.id);
-  console.log(workoutDetails);
   return (
     <div>
       <div className="mb-4 text-xl font-medium text-center">

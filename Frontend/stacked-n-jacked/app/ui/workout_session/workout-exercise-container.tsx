@@ -11,7 +11,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { ExerciseSet, WorkoutExercise } from "@/app/lib/definitions";
+import { ExerciseSet, WorkoutExerciseDetails } from "@/app/lib/definitions";
 import { SetsContainer } from "./set-container";
 
 export function WorkoutExerciseContainer({
@@ -21,11 +21,11 @@ export function WorkoutExerciseContainer({
   handleEditSet,
   handleRemoveExercise,
 }: {
-  workoutEx: WorkoutExercise;
-  handleAddSet: (workoutEx: WorkoutExercise) => void;
-  handleRemoveSet: (workoutEx: WorkoutExercise) => void;
-  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExercise) => void;
-  handleRemoveExercise: (workoutEx: WorkoutExercise) => void;
+  workoutEx: WorkoutExerciseDetails;
+  handleAddSet: (workoutEx: WorkoutExerciseDetails) => void;
+  handleRemoveSet: (workoutEx: WorkoutExerciseDetails) => void;
+  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExerciseDetails) => void;
+  handleRemoveExercise: (workoutEx: WorkoutExerciseDetails) => void;
 }) {
   return (
     <AccordionItem value={workoutEx.exercise.name}>

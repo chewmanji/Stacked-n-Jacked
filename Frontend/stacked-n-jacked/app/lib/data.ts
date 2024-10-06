@@ -1,4 +1,10 @@
-import { Exercise, Workout, User, WorkoutDetails } from "@/app/lib/definitions";
+import {
+  Exercise,
+  Workout,
+  User,
+  WorkoutDetails,
+  WorkoutExerciseDetails,
+} from "@/app/lib/definitions";
 import { getToken } from "../actions/auth";
 
 export async function fetchExercises(): Promise<Exercise[]> {
@@ -61,5 +67,40 @@ export async function fetchCurrentUser(): Promise<User> {
 
   const data: User = await response.json();
 
+  return data;
+}
+
+export async function fetchDataForChart(
+  id: number
+): Promise<WorkoutExerciseDetails[]> {
+  const token = await getToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/workout_exercises/exercises/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data: WorkoutExerciseDetails[] = await response.json();
+  console.log(data);
+  return data;
+}
+
+export async function fetchExercisesFromWorkoutExercises(): Promise<
+  Exercise[]
+> {
+  const token = await getToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/workout_exercises/exercises`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data: Exercise[] = await response.json();
   return data;
 }

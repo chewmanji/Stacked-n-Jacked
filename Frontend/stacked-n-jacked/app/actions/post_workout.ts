@@ -1,11 +1,11 @@
 "use server";
 
-import { Workout, WorkoutExercise } from "../lib/definitions";
+import { Workout, WorkoutExerciseDetails } from "../lib/definitions";
 import { getToken } from "./auth";
 
 export async function postWorkout(
   workout: Workout,
-  workoutExercises: WorkoutExercise[]
+  workoutExercises: WorkoutExerciseDetails[]
 ): Promise<void | { message: string }> {
   const token = await getToken();
   const type = workout.type ? workout.type : null;

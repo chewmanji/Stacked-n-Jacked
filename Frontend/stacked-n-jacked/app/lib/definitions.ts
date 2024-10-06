@@ -8,6 +8,12 @@ export type Exercise = {
   youtubeUrl: string | null;
 };
 
+export type ExerciseChartData = {
+  id: number;
+  name: string;
+  workoutExercisesDetails: WorkoutExerciseDetails[];
+};
+
 export type User = {
   id: number;
   email: string;
@@ -42,15 +48,23 @@ export type WorkoutDetails = {
   type: string;
   notes: string;
   workoutDate: Date;
-  workoutExercises: WorkoutExercise[];
+  workoutExercises: WorkoutExerciseDetails[];
 };
 
 export type WorkoutExercise = {
+  id: number;
+  workoutId: number;
+  exerciseId: number;
+  notes: string | null;
+};
+
+export type WorkoutExerciseDetails = {
   id?: number;
   notes?: string;
   exercise: Exercise;
   sets: ExerciseSet[];
   workout?: Workout;
+  workoutDate?: Date;
 };
 
 export type ExerciseSet = {
@@ -59,7 +73,7 @@ export type ExerciseSet = {
   weight: number;
   setNumber: number;
   notes?: string;
-  exercise?: WorkoutExercise;
+  exercise?: WorkoutExerciseDetails;
 };
 
 export const SignInFormSchema = z.object({

@@ -32,7 +32,7 @@ import {
 
 import {
   Workout,
-  WorkoutExercise,
+  WorkoutExerciseDetails,
   ExerciseSet,
   Exercise,
 } from "@/app/lib/definitions";
@@ -66,13 +66,13 @@ export function SearchTable({
     notes: "",
     type: "",
   });
-  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
-    []
-  );
+  const [workoutExercises, setWorkoutExercises] = useState<
+    WorkoutExerciseDetails[]
+  >([]);
 
   function handleAddExercise(ex: Exercise) {
     const exs = [...workoutExercises];
-    const workoutEx: WorkoutExercise = {
+    const workoutEx: WorkoutExerciseDetails = {
       id: exs.length + 1,
       exercise: ex,
       workout: workout,
@@ -82,13 +82,13 @@ export function SearchTable({
     setWorkoutExercises(exs);
   }
 
-  function handleRemoveExercise(workoutEx: WorkoutExercise) {
+  function handleRemoveExercise(workoutEx: WorkoutExerciseDetails) {
     const exs = workoutExercises.filter((ex) => ex.id !== workoutEx.id);
     exs.forEach((ex, index) => (ex.id = index + 1));
     setWorkoutExercises(exs);
   }
 
-  function handleAddSet(workoutEx: WorkoutExercise) {
+  function handleAddSet(workoutEx: WorkoutExerciseDetails) {
     const set: ExerciseSet = {
       exercise: workoutEx,
       repsCount: 0,
@@ -104,7 +104,7 @@ export function SearchTable({
     setWorkoutExercises(updatedExercises);
   }
 
-  function handleRemoveSet(workoutEx: WorkoutExercise) {
+  function handleRemoveSet(workoutEx: WorkoutExerciseDetails) {
     const updatedExercises = workoutExercises.map((ex) =>
       ex.exercise.id === workoutEx.exercise.id
         ? { ...ex, sets: [...ex.sets.slice(0, -1)] }
@@ -113,7 +113,7 @@ export function SearchTable({
     setWorkoutExercises(updatedExercises);
   }
 
-  function handleEditSet(set: ExerciseSet, workoutEx: WorkoutExercise) {
+  function handleEditSet(set: ExerciseSet, workoutEx: WorkoutExerciseDetails) {
     const setsCopy = [...workoutEx.sets];
     const index = setsCopy.findIndex((s) => s.setNumber === set.setNumber);
     setsCopy[index] = set;

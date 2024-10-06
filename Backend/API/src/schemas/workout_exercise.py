@@ -24,7 +24,7 @@ class WorkoutExerciseDetails(WorkoutExercise):
 
 
 class WorkoutExerciseDetailsChart(BaseSchema):
-    workout_exercise_id: int
+    id: int
     workout_date: datetime.date | None = None
     sets: list[Set]
 

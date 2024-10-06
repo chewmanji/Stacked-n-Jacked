@@ -1,5 +1,5 @@
 "use client";
-import { WorkoutExercise, ExerciseSet } from "@/app/lib/definitions";
+import { WorkoutExerciseDetails, ExerciseSet } from "@/app/lib/definitions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,8 +10,8 @@ export function SetsContainer({
   workoutEx,
   handleEditSet,
 }: {
-  workoutEx: WorkoutExercise;
-  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExercise) => void;
+  workoutEx: WorkoutExerciseDetails;
+  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExerciseDetails) => void;
 }) {
   return (
     <div>
@@ -42,8 +42,8 @@ export function SetContainer({
 }: {
   set: ExerciseSet;
   previousSet: ExerciseSet;
-  workoutEx: WorkoutExercise;
-  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExercise) => void;
+  workoutEx: WorkoutExerciseDetails;
+  handleEditSet: (set: ExerciseSet, workoutEx: WorkoutExerciseDetails) => void;
 }) {
   const [reps, setReps] = useState(set.repsCount || previousSet.repsCount);
   const [weight, setWeight] = useState(set.weight || previousSet.weight);

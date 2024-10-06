@@ -8,7 +8,9 @@ export default function SideNav() {
         className="bg-primary mb-2 flex h-20 items-end justify-start rounded-md p-4 md:h-40"
         href="/"
       >
-        <div className="w-32 md:w-40">HOME PAGE</div>
+        <div className="w-32 md:w-40 font-serif italic text-primary-foreground">
+          Stacked&Jacked
+        </div>
       </Link>
       <NavLinks />
     </div>

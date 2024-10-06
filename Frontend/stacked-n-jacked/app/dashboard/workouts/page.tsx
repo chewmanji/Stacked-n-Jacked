@@ -6,6 +6,11 @@ import { Separator } from "@/components/ui/separator";
 
 export default async function Page() {
   const workouts = await fetchWorkouts();
+  workouts.sort(
+    (a, b) =>
+      moment(a.workoutDate).toDate().getTime() -
+      moment(b.workoutDate).toDate().getTime()
+  );
   return (
     <div>
       {workouts.map((w) => {

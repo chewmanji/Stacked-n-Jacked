@@ -1,5 +1,5 @@
 "use client";
-import { WorkoutDetails, WorkoutExercise } from "@/app/lib/definitions";
+import { WorkoutDetails, WorkoutExerciseDetails } from "@/app/lib/definitions";
 import {
   Table,
   TableBody,
@@ -35,7 +35,7 @@ export function WorkoutDetailsComponent({
 function WorkoutExerciseTable({
   workoutExercise,
 }: {
-  workoutExercise: WorkoutExercise;
+  workoutExercise: WorkoutExerciseDetails;
 }) {
   const totalVolume: number = workoutExercise.sets.reduce(
     (total, currentSet) => total + currentSet.weight * currentSet.repsCount,

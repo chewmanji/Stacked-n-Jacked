@@ -54,7 +54,7 @@ def get_workout_exercises_by_exercise(current_user: Annotated[User, Depends(get_
                                       db: Session = Depends(get_db)):
     exs = workout_exercise_service.get_workout_exercises_by_exercise_id(db, current_user.id, id)
     result = [WorkoutExerciseDetailsChart(
-        workout_exercise_id=ex.id,
+        id=ex.id,
         sets=ex.sets,
         workout_date=ex.workout.workout_date,
     )
