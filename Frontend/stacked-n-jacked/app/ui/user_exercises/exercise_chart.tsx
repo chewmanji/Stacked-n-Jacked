@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import moment from "moment";
-import { act, useState } from "react";
+import { useState } from "react";
 
 const chartConfig = {
   total: {
