@@ -9,7 +9,7 @@ export default async function Page() {
   return (
     <>
       <p className="text-3xl">Exercises</p>
-      <div className="container mx-auto py-10">
+      <div className="py-10">
         <ExerciseTable
           columns={columns}
           data={exercises}

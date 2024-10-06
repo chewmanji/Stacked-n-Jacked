@@ -67,7 +67,7 @@ export async function fetchCurrentUser(): Promise<User> {
 
   const data: User = await response.json();
 
-  return data;
+  return { ...data, birthDate: new Date(data.birthDate) };
 }
 
 export async function fetchDataForChart(

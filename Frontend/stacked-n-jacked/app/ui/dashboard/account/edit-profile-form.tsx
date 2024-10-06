@@ -39,6 +39,7 @@ import { ButtonLoading } from "@/app/ui/button-loading";
 import { useRouter } from "next/navigation";
 
 export function EditProfileForm({ user }: { user: User }) {
+  console.log(typeof user.birthDate);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();

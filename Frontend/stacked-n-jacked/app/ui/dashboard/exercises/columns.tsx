@@ -43,7 +43,7 @@ export const columns: ColumnDef<Exercise>[] = [
     header: "Details",
     cell: ({ row }) => {
       return (
-        <div className="text-yellow-200">
+        <div className="text-primary">
           <Link
             href={{
               pathname: `/dashboard/exercises/${slugify(row.original.name, {
