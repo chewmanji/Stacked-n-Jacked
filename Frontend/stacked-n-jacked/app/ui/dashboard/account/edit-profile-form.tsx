@@ -2,11 +2,10 @@
 
 import { editProfile } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,9 +36,10 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ButtonLoading } from "@/app/ui/button-loading";
 import { useRouter } from "next/navigation";
+import { EditEmailDialog } from "./edit-email-dialog";
+import { EditPasswordDialog } from "./edit-password-dialog";
 
 export function EditProfileForm({ user }: { user: User }) {
-  console.log(typeof user.birthDate);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -56,8 +56,6 @@ export function EditProfileForm({ user }: { user: User }) {
       setIsSubmitting(true);
       const genderData = z.coerce.number().parse(values.gender);
       const message = await editProfile({
-        email: values.email,
-        newPassword: values.newPassword,
         birthDate: values.birthDate,
         gender: genderData,
       });
@@ -80,132 +78,99 @@ export function EditProfileForm({ user }: { user: User }) {
     router.refresh();
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <p className="italic">{user.email}</p>
-              <FormControl>
-                <Input placeholder="New email" {...field} type="email" />
-              </FormControl>
-              <FormDescription>Set new email</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="New password" {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm password</FormLabel>
+    <div>
+      <Label>Email</Label>
+      <p className="italic">{user.email}</p>
+      <div className="flex justify-between">
+        <EditEmailDialog />
+        <EditPasswordDialog />
+      </div>
 
-              <FormControl>
-                <Input placeholder="New password" {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="birthDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Birth date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="birthDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Birth date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      captionLayout="dropdown-buttons"
+                      fromYear={1900}
+                      toYear={new Date().getFullYear()}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          ></FormField>
+          <FormField
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gender</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={user.gender.toString()}
+                >
                   <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
+                    <SelectTrigger className="col-span-4">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
                   </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-full" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    captionLayout="dropdown-buttons"
-                    fromYear={1900}
-                    toYear={new Date().getFullYear()}
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="gender"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={user.gender.toString()}
-              >
-                <FormControl>
-                  <SelectTrigger className="col-span-4">
-                    <SelectValue placeholder="Gender" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Object.entries(Gender).map(([key, value]) => {
-                    if (isNaN(Number(key))) {
-                      return (
-                        <SelectItem key={key} value={`${value}`}>
-                          {key}
-                        </SelectItem>
-                      );
-                    }
-                  })}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <div className="flex justify-end">
-          {isSubmitting ? (
-            <ButtonLoading />
-          ) : (
-            <Button type="submit">Update profile</Button>
-          )}
-        </div>
-      </form>
-    </Form>
+                  <SelectContent>
+                    {Object.entries(Gender).map(([key, value]) => {
+                      if (isNaN(Number(key))) {
+                        return (
+                          <SelectItem key={key} value={`${value}`}>
+                            {key}
+                          </SelectItem>
+                        );
+                      }
+                    })}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          ></FormField>
+          <div className="flex justify-end">
+            {isSubmitting ? (
+              <ButtonLoading />
+            ) : (
+              <Button type="submit">Update profile</Button>
+            )}
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

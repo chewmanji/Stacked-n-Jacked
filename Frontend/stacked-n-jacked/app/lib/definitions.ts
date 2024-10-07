@@ -108,13 +108,12 @@ export const SignUpFormSchema = z
     }
   });
 
-export const EditProfileFormSchema = z
+export const ChangeEmailFormSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+});
+
+export const ChangePasswordFormSchema = z
   .object({
-    email: z
-      .string()
-      .email({ message: "Please enter a valid email." })
-      .trim()
-      .optional(),
     newPassword: z
       .string()
       .min(8, { message: "Be at least 8 characters long" })
@@ -123,12 +122,9 @@ export const EditProfileFormSchema = z
       .regex(/[^a-zA-Z0-9]/, {
         message: "Contain at least one special character.",
       })
-      .trim()
-      .optional(),
-    confirmPassword: z.string().optional(),
-    gender: z.string().optional(),
-    birthDate: z.date().optional(),
-    isVerified: z.boolean().optional(),
+      .trim(),
+
+    confirmPassword: z.string(),
   })
   .superRefine(({ confirmPassword, newPassword }, ctx) => {
     if (confirmPassword !== newPassword) {
@@ -139,6 +135,11 @@ export const EditProfileFormSchema = z
       });
     }
   });
+
+export const EditProfileFormSchema = z.object({
+  gender: z.string().optional(),
+  birthDate: z.date().optional(),
+});
 
 export type FormState =
   | {

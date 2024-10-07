@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { Exercise } from "@/app/lib/definitions";
+import { TargetMusclesCombobox } from "./combobox";
 
 interface DataTableProps {
   columns: ColumnDef<Exercise, unknown>[];
@@ -71,7 +72,7 @@ export function ExerciseTable({
     },
   });
 
-  const handleMuscleClick = (muscle: string) => {
+  function handleMuscleClick(muscle: string) {
     setSelectedMuscles((prevSelectedMuscles) => {
       if (prevSelectedMuscles.includes(muscle)) {
         return prevSelectedMuscles.filter((m) => m !== muscle);
@@ -79,14 +80,14 @@ export function ExerciseTable({
         return [...prevSelectedMuscles, muscle];
       }
     });
-  };
+  }
 
   useEffect(() => {
     table.getColumn("targetMuscle")?.setFilterValue(selectedMuscles);
   }, [selectedMuscles, table]);
 
   return (
-    <div>
+    <div className="py-4">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter exercises..."
@@ -97,22 +98,12 @@ export function ExerciseTable({
           className="max-w-sm"
         />
       </div>
-      <div className="flex-wrap items-center pb-4">
-        {targetMuscles.map((targetMuscle) => {
-          return (
-            <Button
-              key={targetMuscle}
-              onClick={() => handleMuscleClick(targetMuscle)}
-              className={`${
-                selectedMuscles.includes(targetMuscle)
-                  ? "text-primary bg-secondary"
-                  : ""
-              } hover:text-secondary-foreground hover:bg-secondary`}
-            >
-              {targetMuscle}
-            </Button>
-          );
-        })}
+      <div className="pb-4">
+        <TargetMusclesCombobox
+          targetMuscles={targetMuscles}
+          selectedMuscles={selectedMuscles}
+          handleMuscleClick={handleMuscleClick}
+        ></TargetMusclesCombobox>
       </div>
       <div className="rounded-md border">
         <Table>
