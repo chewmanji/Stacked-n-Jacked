@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from pydantic import HttpUrl, Field, field_validator
@@ -7,6 +8,11 @@ from src.schemas.base_schema import BaseSchema
 class ExerciseBase(BaseSchema):
     id: int
     name: str
+
+
+class ExerciseLatest(BaseSchema):
+    id: int
+    workout_date: datetime.date
 
 
 class Exercise(ExerciseBase):

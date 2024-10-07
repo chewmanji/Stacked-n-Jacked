@@ -65,3 +65,11 @@ def get_workout_exercises_by_exercise_id(db: Session, user_id: int, exercise_id:
             .join(WorkoutDB)
             .where(WorkoutDB.user_id == user_id)
             .all())
+
+
+def get_latest_exercises(db: Session, user_id: int)->list[Type[WorkoutExerciseDB]]:
+    return (db.query(WorkoutExerciseDB)
+            .join(ExerciseDB)
+            .join(WorkoutDB)
+            .where(WorkoutDB.user_id == user_id)
+            .all())
