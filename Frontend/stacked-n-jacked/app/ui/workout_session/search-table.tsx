@@ -193,7 +193,12 @@ export function SearchTable({
         {isSubmitting ? (
           <ButtonLoading />
         ) : (
-          <Button onClick={async () => await handleSaveWorkout()}>Save</Button>
+          <Button
+            onClick={async () => await handleSaveWorkout()}
+            disabled={workoutExercises.length === 0}
+          >
+            Save
+          </Button>
         )}
       </div>
       <div className="flex flex-col items-center  mt-3">

@@ -104,3 +104,18 @@ export async function fetchExercisesFromWorkoutExercises(): Promise<
   const data: Exercise[] = await response.json();
   return data;
 }
+
+export async function fetchLatestExercises(): Promise<Exercise[]> {
+  const token = await getToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/workout_exercises/exercises/latest`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data: Exercise[] = await response.json();
+  return data;
+}
