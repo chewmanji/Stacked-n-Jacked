@@ -38,6 +38,7 @@ App is deployed using [Coolify](https://coolify.io/). Check it out [Stacked&Jack
 
 The app has a lot of potential for development.  
 However for the nearest future I plan to refactor code (it's really shitty xd),  
-add more data in dashboard home view, do something useful with user's email (e.g weekly summaries of workouts).  
+add more data in dashboard home view, do something useful with user's email (e.g weekly summaries of workouts),  
+add some testing :grimacing: and logging :sob:.
   
 Feel free to leave a :star2:
